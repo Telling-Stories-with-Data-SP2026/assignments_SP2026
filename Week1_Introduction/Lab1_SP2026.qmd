@@ -1,0 +1,105 @@
+---
+title: "Lab 1 - Welcome to R"
+author: "Spring 2026"
+embed-resources: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+## Instructions
+
+Welcome to R. This first few weeks will feel like you are drinking from a fire hose. Embrace the challenge. We will all get through to the other side. 
+
+This is your **1st Lab!** of the semester. The goal of this assignment is to get you comfortable with the workflow: from Github to Rstudio and back again. Below, I will walk you through a series of steps to get you started. Complete all steps for full credit.
+
+Your final quarto document (.qmd) and rendered .html file must be uploaded to the necessary github repository by end of day on Wednesday January 21st. 
+
+***Note, this is the only time you will see such an 'extension'. Most assignments will be due before class on the following class period.***
+
+### Step 1: Setting up the workflow
+
+Please follow all instructions on Canvas to ensure you have a Github account and a connection between Github and Rstudio. Please reach out should you have issues. 
+
+### Step 2: Create a Local Folder / Directory
+
+***Some of you may have done this already***
+
+Organization is the key to success in any endeavor - not the least of which is coding and data science. To get us started, I want each of you to create a new folder on your machines. Title it anything you want. Put it somewhere you access your files regularly (e.g. `My Documents`). This is where everything from class will go. You will add many folder to this throughout the semester. 
+
+### Step 3: Create your first R Project from Github
+
+Each week, you will have a github repository added to your profile. I will do this. However, we need to link what is online, with what is local on your machine. To do so:
+
+1.  Login to your Github
+2.  Go to our organization (Telling Stories with Data)
+3.  Find the repository you are interested in (e.g. Week 1 - Introduction - NAME)
+4. At the top right of this repository click the green box that say **< > Code**
+5.  Click SSH, and `Copy URL to Clipboard`
+6.  Open an Rstudio session. 
+7.  Under "File" go to "New Project"
+    -  Select 'Version Control'
+    - Select 'Git'
+    - Paste the URL from Github to the 1st box that says 'Repository URL'
+    -  Where it says 'Make it a Subdirectory' - Select the folder you created in **Step 2**
+    - It may ask fro permission(s) - say yes. 
+8.  Now, if you go out to your File Explorer / Finder, look into the Folder you created, you will notice a new folder is created and inside of it is an .rproj file. This is an R Project.
+
+**Every week, we should be working in these projects! You will create new files, save them in this folder you've created (from Github), and then push and pull results from Github.**
+
+### Step 4: Make a Quarto Document - ASSIGNMENT!
+
+**Make sure you are working within the R Project for the week! This will set your working directory automatically.**
+
+Instructions:
+
+1. Make a new Quarto Document. We do this by going to File > New File > Quarto Document OR clicking the green + sign and going to Quarto Document. 
+2.  Title it - "NAME_Lab1_SP2026".Ensure 'HTML' is clicked. Hit Create.
+3.  Eliminate all text below the Top Matter as I want you to start with a fresh document. 
+4.  Using a combination of text and code, complete the following steps. Remember to separate with section headers...
+    *   Section 1: About You
+        *   Tell me your class year, your statistics background (if any), any coding experience you may have, and a fun fact about yourself. 
+        *   Make all answers appear in an unordered list.
+    *   Section 2: What do you want from this class?
+        *   Why are you in this class? What do you want to get out of this course? How can I best help you?
+        *   **Bold** your anwers to this section.
+    *   Section 3: What is your research interest?
+        *   If not research driven, what types of things would you use this class for? (Note R can be used for things like web scraping, pattern recognition, etc.)
+        *   *Italicize* your answers to this section. 
+    *   Section 4: Add some code
+        *   Add in a code chunk. Assign an object. Add a comment to the chunk. Use basic arithmetic (e.g., addition, subtraction, division, multiplicaton).
+        *   Repeat twice.
+
+Make sure you have **embed-resources: true** in the top matter.
+
+### Step 5: Render / Save
+
+Once you have completed all steps, either save first (the disk or File > Save) or hit Render (the arrow at the top). Note, when you render, it will save the file. Make sure you save it in the same folder the R project is coming from. This lets you track it with Git. Name is "NAME_Lab1_SP2026".
+
+You should see it think and then render in either Rstudio or in your broswer. Embrace the warnings. Sometimes it might yell at you. Take a breath. Digest what it says. See if you can work out why it will not work. If it continue, ***reach out***.
+
+### Step 6: Upload to Github
+
+This may be the most important step! You should notice that in your 'Environment' quadrant (top right if you did not change it) has a new tab called 'Git'. Click this, we now need to send our changes back up to Github.
+
+1.  Click the box to 'Stage' (prepare) the documents you want to update. **Only stage your qmd file, the html file, and the updated rproj file**.
+2.  Hit 'Commit'. A window will pop up. Here, right a ***short*** message that says what you have done (e.g., completed lab 1). Then hit 'Commit' again. You'll notice things "dissappear". This just means that Git has prepared to send everything to Github. 
+3.  We still need to full send all files. Now hit the "Push" button. This will send everything to Github. 
+4.  Go to your Github repository to check if it worked. 
+5. **Assignment done**
+
+## Postscript
+
+This process will seem alien for awhile. It will take practice and patience to remember to always check Github first, either clone a repo (bring down) or pull new information, complete additional work, and send changes back online. 
+
+This is an iterative process. It will become muscle memory with time. I have eliminated the step of you creating the repos - I will always have one ready to go for you to use. Just some reminders:
+
+*   When you open the R Project you are working in. Always "Pull" first to see if any changes were made. 
+*   When you start working and creating files, make sure they are saved in the same folder as the current project. 
+*   Commit regularly. 
+*   Do not forget to push.
+*   Only track projects and documents (or related - e.g., photos you may use in your document).
+
+**Have fun!**
+
+      

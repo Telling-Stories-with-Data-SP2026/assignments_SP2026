@@ -1,0 +1,88 @@
+---
+title: "Lab 2 - Spring 2026"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+format: html
+---
+
+**Instructions:**
+Please complete all components described below. In this assignment, you will work through a series of steps introducing you to working with data in *R*. You must address each part with either code, code and text, or just text. All necessary data is available in your `Data` folder under your Week 2 repository. 
+
+**To submit:**
+
+1. Clone your Week 2 Repo if you have not yet done so.
+  * If you did this on Wednesday, hit `Pull` under the Git tab. This will being down the necessary data.
+
+2. Create a new Quarto document. Title it "NAME_Lab2_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is save in the same folder as the RProject file for Week 2. 
+
+6. Commit and Push.
+
+## Steps / Problems
+
+### #1
+
+Please import the penguins dataset. Assign it `penguin`.
+
+### #2
+
+How many rows and columns are in `penguin`?
+
+What type of data are in each column?
+
+### #3
+
+Turn the `Sex` variable into a ***factor***. How many of each biological sex are there?
+
+Turn the `species` variable into a ***factor***. How many of each species are there?
+
+### #4
+
+Summarize the `penguin` dataset. What is the summary for `bill_depth` and `flipper_length`?
+
+### #5 
+
+Create a vector of length 5 with the following names and assign it to new object called Hobbitses:
+
+* Frode, Samwise, Merry, Pippin, Bilbo
+
+### #6 
+
+Create a matrix with 2 rows and 3 columns. Fill the matrix will all numeric values.
+
+### #7
+
+Output the first 5 rows of `penguin`.
+
+Output the last 5 rows of `penguin`.
+
+### #8
+
+Select the value in the 2nd row and 3rd column of `penguin`.
+
+What is this value?
+
+### #9
+
+Select rows 10-15 and columns 3-5 in `penguin`. 
+
+Assign this selection as a new object and call it `sub_penguin`.
+
+Turn this subset into a matrix.
+
+
+### #10
+
+Write me a sentence ***in code*** about penguins. 
+
+*NB: Remember, data types and what is necessary to distinguish certain data type.*
+
+#
+
+***Don't forget to save, render, commit, and push!***

@@ -1,0 +1,82 @@
+---
+title: "Lab 3 - Tidyverse"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+---
+
+**Instructions:**
+
+Please complete all components described below. All necessary data is available in your `Data` folder under the `Week 3 repository`.
+
+**To submit:**
+
+1. Clone your Week 3 Repo if you have not yet done so.
+    - If you have done this earlier in the week, hit `Pull` under the Git tab. This will bring down the necessary data.
+
+2. Create a new Quarto document. Title it "NAME_Lab3_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 3. 
+
+6. Commit and Push.
+
+## Steps
+
+1. At the very top of your document. Include a code chunk that [**opens**]{.underline} the tidyverse and magrittr package.
+
+2.  Provide a 2nd code chunk that imports the dataset `SA_AgeIndicators` as **data0**.
+    - Take note of the data type! Remember the function or method to import excel files. 
+  
+3. Create a subset called **data**, retaining only the following columns: medrec, age, sex, HME_EF_L, HDE_EF_L, man_M1_R, man_M2_R, HDL_L, TDL_L.
+
+4. Use the following code to convert all -1 to NA
+
+```{r}
+#| eval: false
+data[data==-1] <- NA
+```
+
+5.  Use similar code to convert the character "NA" to `NA`. 
+
+6.  Make sure all variables were imported correctly. If not, force them into the following data types. Note - **do not** worry about warnings. The code will still run. 
+    - HME_EF_L and HDE_EF_L are epiphyseal fusion variables (discrete/group variables)
+    - man_M1_R and man_M2_R are dental development scores (discrete/group variables). HINT: you may want to convert these columns to numeric FIRST before you convert to factor
+    - HDL_L and TDL_L are diaphyseal dimensions (continuous variables)
+    - Sex is a group variable
+    - Age is numeric
+
+7.  Remove individuals with:
+    - medrec values of: 43266626 and 44359958
+    - sex is NA
+    - Age is NA
+
+**You should have 675 individuals left!**
+
+8.  Make a new column that makes age an integer. 
+
+9. Please translate the following code from **base** to **tidyverse**. Note, this will not be run. In your chunk, make the first line `#| eval:false`. This is a chunk control command and tells R to not evaluate.
+
+```{r}
+#| echo: true
+#| eval: false
+names(howells)[c(1,2,4)] <- c("id","sex","pop")
+```
+
+10. Please translate the following code from **tidyverse** to **english**.
+
+```{r}
+#| echo: true
+#| eval: false
+
+howells %>% select(id=ID, sex=Sex, pop=Population, GOL:XCB) %>% filter(pop %in% c("ATAYAL","ZULU","NORSE")) %>% head(4)
+```
+
+#
+
+***Don't forget to save, render, commit, and push!***

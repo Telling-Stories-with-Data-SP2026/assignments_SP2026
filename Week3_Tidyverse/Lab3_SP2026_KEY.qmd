@@ -1,0 +1,113 @@
+---
+title: "Lab3_SP2026_KEY"
+theme: journal
+toc: true
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 3. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - tidyverse.**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+## Part 1
+
+```{r part 1}
+#| message: false
+library(tidyverse)
+library(magrittr)
+```
+
+## Part 2
+
+```{r part 2}
+data0 <- readxl::read_excel("~/Documents/assignments_SP2026/Week3_Tidyverse/data/SA_AgeIndicators.xlsx")
+```
+
+## Part 3
+
+```{r part 3}
+data <- data0 %>% select(medrec, age, sex, HME_EF_L, HDE_EF_L, man_M1_R, man_M2_R, HDL_L, TDL_L)
+```
+
+## Part 4
+
+```{r part 4}
+data[data==-1] <- NA
+```
+
+## Part 5
+
+```{r part 5}
+data[data== "NA"] <- NA
+```
+
+## Part 6
+
+```{r part 6 edit}
+data %<>% mutate(HME_EF_L = factor(HME_EF_L), HDE_EF_L = factor(HDE_EF_L), 
+                 man_M1_R = factor(man_M1_R), man_M2_R = factor(man_M2_R), 
+                 HDL_L = as.numeric(HDL_L), TDL_L = as.numeric(TDL_L), sex = factor(sex),
+                 age = as.numeric(age))
+```
+
+```{r part 6 str}
+str(data)
+```
+
+## Part 7
+
+```{r part 7}
+data %<>% select(medrec, sex, age) %>% filter(!medrec %in% c(43266626, 44359958)) %>% na.omit()
+
+# data %<>% filter(!medrec %in% c(43266626, 44359958), sex != "NA", age != "NA") 
+```
+
+```{r part 7 2}
+nrow(data)
+```
+
+
+## Part 8
+
+```{r part 8}
+data %<>% mutate(age_int = as.integer(age))
+
+# data$age_int <- as.integer(age)
+```
+
+```{r part 8 2}
+is.integer(data$age_int)
+```
+
+
+## Part 9
+
+```{r part 9}
+#| eval: false
+
+# Base
+names(howells)[c(1,2,4)] <- c("id","sex","pop")
+
+# Tidyverse
+howells %<>% select(id = 1, sex = 2, pop = 3)
+```
+
+## Part 10
+
+Using the howells dataframe, select the id, sex, population, and GOL to XCB columns. At the same time, rename id, sex, and population. Next, filter the rows such that the dataframe only includes Atayal, Zulu, and Norse individuals. Lastly, print only the top 4 rows. 
+
+```{r}
+#| eval: false
+
+howells %>% select(id=ID, sex=Sex, pop=Population, GOL:XCB) %>% filter(pop %in% c("ATAYAL","ZULU","NORSE")) %>% head(4)
+```
+

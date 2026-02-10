@@ -1,0 +1,175 @@
+---
+title: "Lab 5 - Visualizations + Functions"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+---
+
+**Instructions:**
+
+Please complete all components described below. All necessary data is available in your `Data` folder under the `Week 5 repository`.
+
+**To submit:**
+
+1. Clone your Week 5 Repo if you have not yet done so.
+    - If you have done this earlier in the week, hit `Pull` under the Git tab. This will bring down the necessary data.
+
+2. Create a new Quarto document. Title it "NAME_Lab5_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 5. 
+
+6. Commit and Push.
+
+**Remember:**
+
+1.  Whenever you are using a package. You must open it. Remember `library()`. This must be in a code chunk in your document. 
+2.  If you are using data, you must import it inside a code chunk. You cannot just use the import data button in the `Environment` pane. 
+3.  Pay attention to your warnings and errors. They mean something.
+  - Remember, ggplot requires a `+` sign, not the pipe.
+4. Remember to `set.seed()`.
+
+# Questions
+
+## Section 1: Simulation
+
+1.  Simulate data for 30 draws from a normal distribution where the mean is 120 and the standard deviation is 10. Save the object. Summarize the object. 
+
+2.  Create a dataframe (n = 27) with 3 groups, 2 factors and two quantitative response variables. Use the replicate function `rep` for grouping and factor variables.
+
+3.  Sample 10 letters from the alphabet (a-z). Save and print the object.
+
+## Section 2: Functions
+
+1. Practice turning the following code snippets into functions. Think about what each function does. What would you call it? How many arguments does it need? You will end up with 3 functions. Note, your function must run and return an answer for full ccredit.
+
+```{r}
+#| echo: true
+#| eval: false
+
+mean(is.na(x))
+mean(is.na(y))
+mean(is.na(z))
+
+x / sum(x, na.rm = TRUE)
+y / sum(y, na.rm = TRUE)
+z / sum(z, na.rm = TRUE)
+
+round(x / sum(x, na.rm = TRUE) * 100, 1)
+round(y / sum(y, na.rm = TRUE) * 100, 1)
+round(z / sum(z, na.rm = TRUE) * 100, 1)
+```
+
+## Section 3: Conditional Statements
+
+1.  Finish the control-flow construct with the following behavior. Note, this means write a conditional if, else if, statement. 
+
+  * If both `X` and `FB` are 15 or higher, set `social` equal to double the sum of `X` and `FB`.
+
+  * If both `X` and `FB` are strictly below 10, set `social` equal to half the sum of `X` and `FB`.
+
+  * In all other cases, set `social` equal to `X + FB`.
+
+  * Finally, print the resulting `social` variable.
+  
+## Section 4: For Loops
+
+1. Write a for loop that iterates over the numbers 1 to 7 and prints the cube (`^3`) of each number using `print()`.
+
+2.  Write a while loop that prints out standard random normal numbers (use rnorm()) but stops (breaks) if you get a number bigger than 1. Note a standard normal has a mean 0 and standard deviation 1. 
+
+## Section 5: GGplot
+
+**Notes:**
+1. You will need the following packages if you have notr already opened them: `tidyverse`, `magrittr`, and `ggpubr`.
+  * You may need to install `ggpubr`.
+
+**Instructions:**
+
+1.  Import the following datasets into your environment: "sateeth.csv" and "saHeight.csv". Name them anything you like. 
+
+2.  Is there anything strange about these datasets? Remember, the first step of any analysis is to inspect the data. Tell me what you think is weird. Then make the requisite changes. 
+
+###  Visualization # 1 (sateeth)
+
+  * Remove any rows where man_M1_R == -1. How many rows are left?
+  
+  * Make column "man_M1_R" a factor
+  
+  * Make the object "mytheme" with the following code:
+  
+```{r}
+#| echo: true
+#| eval: false
+
+mytheme <- theme_bw() + theme(legend.key=element_blank(), legend.background=element_blank(), panel.grid.major=element_blank(), legend.tite=element_text(size=11, face='plain'))
+```
+  
+  * Create the following image:
+
+![](viz1.png)
+
+* Hints:
+  * Use mytheme
+  * Manually set the colors to "goldenrod" and "steelblue"
+  
+###  Vizualization # 2 (saHeight)
+
+  * Change the name of column "weight (kg)" to "weight"
+  * Change weight from a character to an integer
+    * You may get a warning. This is okay. What do you think it means?
+  * Use the following code to subset your data to a new object called "saH":
+  
+```{r}
+#| echo: true
+#| eval: false
+
+saHeight %>% filter(age_y != 1.32 & height_2 != 77.5, age_y !=4, height_2 != 88)
+```
+  
+  * Explore the relationship between "height_2" (x-axis) and "weight" (y-axis) in saH using an appropriate visualization
+  
+  * Create the following visualization:
+
+![](viz2.png)  
+
+* Hints:
+
+  * Colors are "orchid" and "navy"
+  * Pay attention to the point shapes!
+  * Pay attention to the legend!
+
+
+### Visualization # 3 (saH)
+
+**Create the following visualization:**
+
+![](viz3.png)
+
+* Hints:
+
+  * Use the `theme_pubclean()`
+  * set alpha = 0.4
+  * Use the following code:
+
+```{r}
+#| echo: true
+#| eval: false
+
+scale_fill_manual(guide=guide_legend(title="Sex"), values=c("antiquewhite","forestgreen"))
+```
+
+### Visualization #4
+
+Use the following website and sateeth to create the following visualization: https://rpkgs.datanovia.com/ggpubr/index.html.
+
+![](viz4.png)
+
+#
+
+***Don't forget to save, render, commit, and push!***

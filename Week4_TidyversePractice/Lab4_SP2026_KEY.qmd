@@ -1,0 +1,402 @@
+---
+title: "Lab4_SP2026_KEY"
+theme: journal
+toc: true
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 4. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - tidyverse.**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+## Section 3.2
+
+```{r}
+#| message: false
+library(nycflights13)
+library(tidyverse)
+```
+
+
+### 3.2.5.1
+
+* Had an arrival delay of 2 or more hours
+
+```{r}
+#| echo: true
+
+flights |>
+  filter(arr_delay >= 120) |>
+  arrange(desc(arr_delay))
+```
+
+* Flew to Houston (`IAH` or `HOU`)
+
+```{r}
+#| echo: true
+
+flights |>
+  filter(dest %in% c("IAH", "HOU"))
+```
+
+* Were operated by United, American, or Delta
+
+```{r}
+#| echo: true
+
+flights |>
+  filter(carrier %in% c("UA", "DL", "AA"))
+```
+
+* Departed in summer (July, August, and September)
+
+```{r}
+#| echo: true
+
+flights |>
+  filter(month %in% c(7, 8, 9))
+```
+
+* Arrived more than two hours late but didn’t leave late
+
+```{r}
+#| echo: true
+
+flights |> 
+  filter(arr_delay >= 120 & dep_delay <= 0) |> view()
+```
+
+* Were delayed by at least an hour, but made up over 30 minutes in flight
+
+```{r}
+#| echo: true
+
+flights |> 
+  filter(dep_delay >= 60 & dep_delay - arr_delay > 30)
+```
+
+### 3.2.5.2
+
+```{r}
+#| echo: true
+
+flights |> 
+  arrange(desc(dep_delay)) |> 
+  arrange(sched_dep_time) |>
+  relocate(dep_delay, sched_dep_time)
+```
+
+### 3.2.5.3
+
+```{r}
+#| echo: true
+
+flights |> 
+  mutate(speed = distance / (air_time / 60)) |>
+  arrange(desc(speed)) |>
+  relocate(speed)
+```
+
+### 3.2.5.4
+
+Yes, there was a flight on every day of 2013 since there are 365 distinct combinations of year, month, and day, which is equal to the number of days in the year 2013.
+
+```{r}
+#| echo: true
+
+flights |> 
+  distinct(year, month, day) |>
+  nrow()
+```
+
+### 3.2.5.5
+
+```{r}
+#| echo: true
+
+flights |> 
+  arrange(desc(distance)) |>
+  relocate(distance)
+```
+
+```{r}
+#| echo: true
+
+flights |> 
+  arrange(distance) |>
+  relocate(distance)
+```
+
+
+### 3.2.5.6
+
+The order doesn’t matter because we filter based on a condition, not based on row number.
+
+## Section 3.3
+
+### 3.3.5.1
+
+I would expect dep_time to be sched_dep_time + dep_delay.
+
+```{r}
+#| echo: true
+
+flights |> 
+  relocate(dep_time, sched_dep_time, dep_delay)
+```
+
+### 3.3.5.2
+
+A few examples:
+
+```{r}
+#| echo: true
+
+flights |> 
+  select(dep_time, dep_delay, arr_time, arr_delay)
+```
+
+```{r}
+#| echo: true
+
+flights |> 
+  select(starts_with("dep"), starts_with("arr"))
+```
+
+```{r}
+#| echo: true
+
+flights |>
+  select(dep_time:arr_delay, -contains("sched"))
+```
+
+### 3.3.5.3
+
+You get the variable just once. 
+
+```{r}
+#| echo: true
+
+flights |> 
+  select(dep_time, dep_time)
+```
+
+### 3.3.5.4
+
+You ask if `any_of()` these variables have a certain thing you are looking for.
+
+```{r}
+#| echo: true
+
+variables <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+flights |> 
+  select(any_of(variables))
+```
+
+### 3.3.5.5
+
+Yes, it does surprise me since the variable names are lowercase but the string in contains() is uppercase. By default, contains() ignores case.
+
+```{r}
+#| echo: true
+
+flights |> 
+  select(contains("TIME"))
+```
+
+To change this default behavior, set ignore.case = FALSE.
+
+```{r}
+#| echo: true
+
+flights |> 
+  select(contains("TIME", ignore.case = FALSE))
+```
+
+### 3.3.5.6
+
+```{r}
+#| echo: true
+
+flights |>
+  rename(air_time_min = air_time) |>
+  relocate(air_time_min)
+```
+
+### 3.3.5.7
+
+This doesn’t work because the result of the `select()` step is a data frame with only the tailnum variable, so it’s not possible to arrange it by another variable, arr_delay. AKA - we re missing the `tailnum` downstream. 
+
+## Section 3.5
+
+### 3.5.7.1
+
+Frontier
+
+```{r}
+#| echo: true
+
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = mean(dep_delay, na.rm = TRUE)) |>
+  arrange(desc(avg_dep_delay))
+```
+
+### 3.5.7.2
+
+```{r}
+#| echo: true
+
+flights |> 
+  group_by(dest) |> 
+  arrange(dest, desc(dep_delay)) |>
+  slice_head(n = 5) |>
+  relocate(dest, dep_delay)
+```
+
+### 3.5.7.3
+
+Over the course of the day, hourly average departure delay increases until about 7pm, and then declines again, however doesn’t go as low as the beginning of the day.
+
+```{r}
+#| echo: true
+
+flights |>
+  group_by(hour) |>
+  summarize(avg_dep_delay = mean(dep_delay, na.rm = TRUE)) |>
+  ggplot(aes(x = hour, y = avg_dep_delay)) + 
+  geom_smooth()
+```
+
+### 3.5.7.4
+
+Supplying a negative value arranges the data frame in either ascending (with slice_min()) or descending (with slice_max()) order, but it doesn’t actually slice the data frame for the lowest/highest values of the given variable.
+
+```{r}
+#| echo: true
+
+flights |> 
+  slice_min(dep_delay, n = -5) |>
+  relocate(dep_delay)
+```
+
+```{r}
+#| echo: true
+
+flights |> 
+  slice_min(dep_delay, n = 5) |>
+  relocate(dep_delay)
+```
+
+```{r}
+#| echo: true
+
+flights |> 
+  slice_max(dep_delay, n = -5) |>
+  relocate(dep_delay)
+```
+
+```{r}
+#| echo: true
+
+flights |> 
+  slice_max(dep_delay, n = 5) |>
+  relocate(dep_delay)
+```
+
+### 3.5.7.5
+
+count() counts the number of observations in each group, setting the sort argument to TRUE arranges the categories in descending order of number of observations.
+
+### 3.5.7.6
+
+First, let’s define the data frame df.
+
+```{r}
+#| echo: true
+
+df <- tibble(
+  x = 1:5,
+  y = c("a", "b", "a", "a", "b"),
+  z = c("K", "K", "L", "L", "K")
+)
+```
+
+**a.** The following groups df by y.
+
+```{r}
+#| echo: true
+
+df |>
+  group_by(y)
+```
+
+**b.** The following arranges df in ascending order of the value of y.
+
+```{r}
+#| echo: true
+
+df |>
+  arrange(y)
+```
+
+**c.** The following groups df by y and then calculates the average value of x for each group.
+
+```{r}
+#| echo: true
+
+df |>
+  group_by(y) |>
+  summarize(mean_x = mean(x))
+```
+
+**d.** The following groups df by y and z, and then calculates the average value of x for each group combination. The resulting data frame is grouped by y.
+
+```{r}
+#| echo: true
+
+
+df |>
+  group_by(y, z) |>
+  summarize(mean_x = mean(x))
+```
+
+**e.** The following groups df by y and z, and then calculates the average value of x for each group combination. The resulting data frame is not grouped.
+
+```{r}
+#| echo: true
+
+
+df |>
+  group_by(y, z) |>
+  summarize(mean_x = mean(x), .groups = "drop")
+```
+
+**f.** Each of the following groups df by y and z, and then calculates the average value of x for each group combination. With summarize() the resulting data frame has one row per group combination while with mutate() the resulting data frame has the same number of rows as the original data frame.
+
+```{r}
+#| echo: true
+
+df |>
+  group_by(y, z) |>
+  summarize(mean_x = mean(x))
+```
+
+```{r}
+#| echo: true
+
+df |>
+  group_by(y, z) |>
+  mutate(mean_x = mean(x))
+```
+

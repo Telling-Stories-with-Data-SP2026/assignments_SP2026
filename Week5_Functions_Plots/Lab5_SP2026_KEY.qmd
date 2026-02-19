@@ -1,0 +1,326 @@
+---
+title: "Lab5_SP2026_KEY"
+theme: journal
+toc: true
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 5. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - tidyverse.**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+## Section 1
+
+**Remember to set seed.**
+
+```{r}
+#| echo: true
+
+set.seed(1991)
+```
+
+
+### Number 1
+
+Simulate data for 30 draws from a normal distribution where the mean is 120 and the standard deviation is 10. Save the object. Summarize the object. 
+
+```{r}
+#| echo: true
+
+obj <- rnorm(n = 30, mean = 120, sd = 10)
+summary(obj)
+```
+
+### Number 2
+
+Create a dataframe (n = 27) with 3 groups, 2 factors and two quantitative response variables. Use the replicate function `rep` for grouping and factor variables.
+
+```{r}
+#| echo: true
+
+# Create the grouping and factor variables using rep()
+# Group variable with 3 levels (A, B, C), each repeated 9 times (27/3 = 9)
+group <- rep(c("A", "B", "C"), each = 9)
+
+# Factor 1 with 3 levels (X, Y, Z), repeated 3 times within each group's 9 observations (9/3 = 3)
+factor1 <- rep(c("X", "Y", "Z"), times = 9)
+
+# Factor 2 with 3 levels (M, N, O), the sequence repeated entirely 3 times
+factor2 <- rep(c("M", "N", "O"), each = 3, times = 3)
+
+# Create two quantitative response variables with random data (e.g., using rnorm)
+# The number of observations must be 27 for all vectors
+response1 <- rnorm(27, mean = 10, sd = 2)
+response2 <- rnorm(27, mean = 50, sd = 5)
+
+# Combine the vectors into a data frame
+df <- data.frame(
+  Group = group,
+  Factor1 = factor1,
+  Factor2 = factor2,
+  Response1 = response1,
+  Response2 = response2
+)
+
+# Optional: Convert character vectors to factors
+df$Group <- as.factor(df$Group)
+df$Factor1 <- as.factor(df$Factor1)
+df$Factor2 <- as.factor(df$Factor2)
+
+# Print the first few rows of the data frame to verify the structure
+head(df)
+
+# Print the dimensions of the data frame to confirm n=27
+dim(df)
+
+```
+
+### Number 3
+
+```{r}
+#| echo: true
+
+# 1. Sample 10 letters without replacement
+sampled_letters <- sample(letters, 10) # letters is in R
+
+# 2. Save (already done above) and Print the object
+print(sampled_letters)
+
+```
+
+## Section 2
+
+### Number 1
+
+Practice turning the following code snippets into functions. Think about what each function does. What would you call it? How many arguments does it need? You will end up with 3 functions. Note, your function must run and return an answer for full credit.
+
+```{r}
+#| echo: true
+
+# Function 1: Calculate proportion of missing values
+prop_na <- function(x) {
+  mean(is.na(x))
+}
+
+# Function 2: Normalize a vector (proportions that sum to 1)
+normalize <- function(x) {
+  x / sum(x, na.rm = TRUE)
+}
+
+# Function 3: Convert to percentage, rounded to 1 decimal place
+to_percent <- function(x, digits = 1) {
+  round(x / sum(x, na.rm = TRUE) * 100, digits)
+}
+```
+
+#### Test
+
+```{r}
+#| echo: true
+
+x <- c(1, 2, NA, 4, 5)
+y <- c(10, 20, 30, NA, NA)
+z <- c(100, 200, 300, 400, 500)
+
+# Function 1 - proportion of NAs
+prop_na(x)   # 0.2
+prop_na(y)   # 0.4
+prop_na(z)   # 0.0
+
+# Function 2 - normalize
+normalize(x)   # NA NA  NA 0.3076923 0.3846154  (NAs stay NA)
+normalize(z)   # 0.0667 0.1333 0.2000 0.2667 0.3333
+
+# Function 3 - as percentage
+to_percent(x)   # NA NA NA 30.8 38.5
+to_percent(z)   # 6.7 13.3 20.0 26.7 33.3
+```
+
+## Section 3
+
+### Number 1
+
+```{r}
+#| echo: true
+
+X <- 12
+FB <- 18
+
+if (X >= 15 & FB >= 15) {
+  social <- 2 * (X + FB)
+} else if (X < 10 & FB < 10) {
+  social <- (X + FB) / 2
+} else {
+  social <- X + FB
+}
+
+print(social)
+```
+
+#### Testing
+
+```{r}
+#| echo: true
+
+# Case 1: Both >= 15 → double the sum
+X <- 20; FB <- 16
+# social = 2 * (20 + 16) = 72
+
+# Case 2: Both strictly < 10 → half the sum
+X <- 5; FB <- 8
+# social = (5 + 8) / 2 = 6.5
+
+# Case 3: All other cases → X + FB
+X <- 12; FB <- 18
+# social = 12 + 18 = 30
+```
+
+## Section 4
+
+### Number 1
+
+Write a for loop that iterates over the numbers 1 to 7 and prints the cube (`^3`) of each number using `print()`.
+
+```{r}
+#| echo: true
+
+for (i in 1:7) {
+  print(i^3)
+}
+```
+
+
+### Number 2
+
+Write a while loop that prints out standard random normal numbers (use rnorm()) but stops (breaks) if you get a number bigger than 1. Note a standard normal has a mean 0 and standard deviation 1. 
+
+```{r}
+#| echo: true
+
+while (TRUE) {
+  num <- rnorm(1)
+  print(num)
+  if (num > 1) {
+    break
+  }
+}
+```
+
+## Section 5
+
+
+### Library Chunk
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+library(magrittr)
+library(ggpubr)
+```
+
+### Import Data - Q1
+
+```{r}
+#| echo: true
+
+teeth <- read.csv("/Users/christopherwolfe/Library/CloudStorage/Dropbox/Courses/Elaine_Stats/Courses/ANTH7301J_Applied-Statistics-Using-R/data/sateeth.csv")
+
+height <- read.csv("/Users/christopherwolfe/Library/CloudStorage/Dropbox/Courses/Elaine_Stats/Courses/ANTH7301J_Applied-Statistics-Using-R/data/saHeight.csv")
+```
+
+### Question 2
+
+Yes
+\
+\
+- saHeight appears to have a weird extra column called “. . . 8”. In addition, there are spaces and special characters for “height (cm)” and “weigth (cm)”, which I would want to change before subsetting data or running any analyses.
+
+#### Vizualization #1
+
+```{r}
+#| echo: true
+
+teeth <- teeth[teeth$man_M1_R != "-1", ] # remove rows where man_M1_R==-1
+teeth$man_M1_R <- factor(teeth$man_M1_R) # factor man_M1_R
+```
+
+```{r}
+#| echo: true
+
+nrow(teeth)
+```
+
+```{r}
+#| echo: true
+
+mytheme <- theme_bw() +
+theme(legend.key=element_blank(), legend.background=element_blank(),
+panel.grid.major=element_blank(),
+legend.title=element_text(size=11, face='plain'))
+```
+
+```{r}
+#| echo: true
+
+ggplot(teeth, aes(x=man_M1_R, y=agey)) + mytheme +
+geom_boxplot(aes(color=SEX)) +
+scale_color_manual(values=c("goldenrod","steelblue")) +
+labs(x="Mandibular M1 Development", y="Age (years)", color="Sex")
+```
+
+#### Visualiation # 2
+
+```{r}
+#| echo: true
+
+names(height)[7] <- "weight" # change "weight (kg)" to "weight"
+height$weight <- as.integer(height$weight) # change to integer
+```
+
+```{r}
+#| echo: true
+
+saH <- height %>% filter(age_y!=1.32 & height_2!=77.5,
+age_y !=4, height_2!=88)
+```
+
+```{r}
+#| echo: true
+
+ggplot(saH, aes(x=height_2, y=weight, color=sex)) + mytheme +
+geom_point(aes(pch=sex)) + geom_smooth(se=F) +
+scale_color_manual(values=c("orchid","navy")) +
+scale_shape_manual(values=c(16, 1)) +
+labs(x="Height (cm)", y="Weight (kg)", color="Sex", pch="Sex",
+title="Relationship between Height and Weight")
+```
+
+#### Visualization # 3
+
+```{r}
+#| echo: true
+
+ggplot(saH, aes(x=height_2, fill=sex)) + theme_pubclean() +
+geom_density(alpha=0.4) +
+scale_fill_manual(guide=guide_legend(title="Sex"), values=c("antiquewhite","forestgreen"))
+```
+
+#### Visualization # 4
+
+```{r}
+#| echo: true
+
+ggdensity(teeth, x="agey", add="mean", rug=TRUE,
+color="SEX", fill="SEX", palette=c("#00AFBB", "#E7B800"))
+```

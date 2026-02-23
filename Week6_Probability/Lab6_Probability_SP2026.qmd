@@ -1,0 +1,111 @@
+---
+title: "Lab 6 - Probability"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+---
+
+**Instructions:**
+
+Please complete all components described below.
+
+**To submit:**
+
+1. Clone your Week 6 Repo if you have not yet done so.
+
+2. Create a new Quarto document. Title it "NAME_Lab6_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 6. 
+
+6. Commit and Push.
+
+**Remember:**
+
+1.  Whenever you are using a package. You must open it. Remember `library()`. This must be in a code chunk in your document. 
+2.  If you are using data, you must import it inside a code chunk. You cannot just use the import data button in the `Environment` pane. 
+3.  Pay attention to your warnings and errors. They mean something.
+  - Remember, ggplot requires a `+` sign, not the pipe.
+4. Remember to `set.seed()`.
+
+# Questions
+
+## Part 1: The Normal Distribution
+
+### Exercise 1
+
+Use `rnorm()` to simulate 1,000 exam scores from a population with a mean of 75 and standard deviation of 10. Plot a histogram of your results and overlay a density curve. Does the shape look like what you'd expect? What happens if you change n to 50?
+
+### Exercise 2
+
+Use `dnorm()` to compute the density of the normal distribution at x = 70, 75, and 80, given mean = 75 and sd = 10. Plot the full density curve from x = 40 to x = 110. Which value has the highest density and why?
+
+### Exercise 3
+
+A standardized test has scores that are normally distributed with mean = 500 and sd = 100.
+
+* What proportion of students scored below 450?
+* What proportion scored above 650?
+* What proportion scored between 400 and 600?
+
+Hint: Use `pnorm()`
+
+## Part 2: The Binomial Distribution
+
+### Exercise 5
+
+A multiple choice quiz has 20 questions, each with 4 answer choices. A student guesses randomly on every question.
+
+* Use `dbinom()` to find the probability of getting exactly 5 correct.
+* Plot the full probability mass function (all outcomes 0–20). What does the shape tell you?
+
+### Exercise 6
+
+Using `pbinom()`.
+
+* What is the probability of getting 8 or fewer correct by guessing?
+* What is the probability of getting more than 10 correct?
+* Would getting 12 correct be surprising? Use a probability to support your answer.
+
+## Part 3: The Poisson Distribution
+
+### Exercise 7
+
+A hospital emergency room receives an average of 8 patients per hour. This means lambda = 8 in the `Poisson` functions. (e.g., `dpois(x = COUNT, lambda = 8)`).
+
+* Use `dpois()` to find the probability of receiving exactly 8 patients in a given hour.
+* Find the probability of receiving fewer than 5 patients using `ppois().`
+* Simulate 500 hours of arrivals using `rpois()` and plot the result.
+
+## Part 4: The Uniform and Exponential Distribution
+
+### Exercise 8
+
+A bus arrives at a stop at a uniformly random time between 0 and 30 minutes after you arrive.
+\
+**This is the uniform distribution.** 
+
+* Use `punif()` to find the probability you wait less than 10 minutes.
+* Use `qunif()` to find the wait time that only 25% of riders experience or less.
+
+### Exercise 9
+
+The time between customer service calls follows an exponential distribution with a mean of 5 minutes (rate = 1/5). 
+\
+**This is the exponential distribution.** 
+
+* Use `pexp()` to find the probability the next call arrives within 3 minutes.
+* Use `qexp()` to find the time by which 90% of calls will have arrived.
+
+## Part 5: Synthesis
+
+Exercise 10: Simulate 10,000 data points using a distribution of your choosing. Find the 95% interval range (probs = 0.025-0.975) of your values. Plot the histogram, overlay a density, and label the minimum and maximum of your range. 
+
+#
+
+***Don't forget to save, render, commit, and push!***

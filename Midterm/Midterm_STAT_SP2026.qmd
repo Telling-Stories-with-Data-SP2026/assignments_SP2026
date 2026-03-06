@@ -1,0 +1,134 @@
+---
+title: "Midterm Practical - Spring 2026"
+subtitle: "ANTH 3900/5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+---
+
+<span style="color:red;">**Due: Monday 3/16 by 10AM! No exceptions!**</span>
+
+**Instructions:**
+
+Please complete all components described below. All necessary data is available in your `Data` folder under your `Midterm Practical repository`.
+
+This assignment is meant to reinforce skills learned to this point in the semester. You may be expected to know and utilize any of the following: Base R, Tidyverse, Function Writing and For Loops, Visualizations using ggplot, Probability in R, and Hypothesis Testing. I have organized this assignment by section. But, just because one section may specifically focus on "Data Munging" it does not mean you may not necessarily use similar steps in other areas. The means of assessment will just change depending on what I am asking. 
+
+I ***do not*** tell you what packages to open or what functions to use. This is on you. Each section will have a single dataset. Remember, import all data, open your packages, and perhaps, set seed, at the beginning of your files. 
+
+**To submit:**
+
+1. Clone your Midterm Practical repository if you have not yet done so.
+    - If you have done this earlier in the week, hit `Pull` under the Git tab. This will bring down the necessary data.
+
+2. Create a new Quarto document. Title it "NAME_Midterm_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for the midterm. 
+
+6. Commit and Push.
+
+**Remember:**
+
+1.  Whenever you are using a package. You must open it. Remember `library()`. This must be in a code chunk in your document. 
+2.  If you are using data, you must import it inside a code chunk. You cannot just use the import data button in the `Environment` pane. 
+3.  Pay attention to your warnings and errors. They mean something.
+  - Remember, ggplot requires a `+` sign, not the pipe.
+4. Remember to `set.seed()`.
+
+# Questions
+
+## Section 1: Data Munging
+
+***Data: svad_lb.csv***
+
+This is a data set of human long bone growth data. Each row is an individual. Columns 1 to 3 are demographic variables. All other columns are measurements (diaphyseal length or breadth).
+
+### Question 1
+
+Load the data set and inspect its structure. Replace all values equal to -1 with NA. Using tidyverse functions, identify and report the total number of missing values in the measurement columns for only the female individuals. (4 points)
+
+### Question 2
+
+Filter rows where agey is between 0 and 5 AND where FDL_L is greater than or equal to 90. Select only the 6 long bong measurements (FDL, TDL, FBDL, HDL, RDL, UDL). Create a new variable called `crural` where TDL is divided by FDL. (4 points)
+
+### Question 3
+
+Group the data by sex and summarize across all 6 long bone measurements (FDL, TDL, FBDL, HDL, RDL, UDL) taking the total count (n), mean, and standard deviation in your summary output. Note, this is the whole data set, not the filtered data above. Remember, you must remove NAs to compute these measurements. (4 points)
+
+### Question 4
+
+Create a new column where age is an integer. Group by this column. Using the breadth variables on the lower leg (FMSB, FDB, TPB, TMSB, TDB) summarize taking the total count (n), mean, and standard deviation in your summary output. (4 points)
+
+### Question 5
+
+Rename all measurement columns such that the ending ("_L") is removed and the names are in all lower case. Print the column names to prove you have done this. (4 points)
+
+## Section 2: Visualizations
+
+***Data: palm.csv***
+
+> Plant traits are critical to plant form and function —including growth, survival and reproduction— and therefore shape fundamental aspects of population and ecosystem dynamics as well as ecosystem services. Here, we present a global species-level compilation of key functional traits for palms (Arecaceae), a plant family with keystone importance in tropical and subtropical ecosystems. For more information click [here](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-03-18/readme.md).
+
+### Question 6
+
+Produce a publication-quality grouped plot (e.g., boxplot or violin) comparing a continuous outcome across groups. Requires proper axis labels and a clean theme. Note, you may have to do some cleaning (including making sure there are factors to group) before your final plot. (5 points)
+
+### Question 7
+
+Create a scatter plot with a regression line faceted by a categorical grouping variable. Change axis labels and axis scale. Incorporate a theme. Interpret what the plot communicates. (5 points)
+
+### Question 8
+
+Create a visualization of your choice that best communicates a key pattern in the data. Briefly justify your choice of plot type. (5 points)
+
+## Section 3: Assumptions and Significance Testing
+
+***Data: diwali.csv***
+
+> The data this week comes from sales data for a retail store during the Diwali festival period in India. For more information click [here](https://github.com/rfordatascience/tidytuesday/blob/main/data/2023/2023-11-14/readme.md).
+
+### Question 9
+
+Compare the difference in the amount of money spent `Amount` across each individual `Zone` in India. Check the assumptions (normality, homogeneity of variance, and linearity) required to compare the `Amount` variable. Show your code and output. (3 points)
+
+### Question 10
+
+Detect outliers in the `Amount` variable. Visualize them, decide how to handle them, and briefly justify your decision. (4 points)
+
+### Question 11 
+
+Based on your assumption checks, conduct the appropriate test (parametric or non-parametric, 2 groups or 3+ groups). Report the test statistic, p-value, and interpretation. (4 points)
+
+### Question 12
+
+Repeat the steps in Q9-Q11 but instead, I want to compare differences based on marital status. (4 points)
+
+## Section 4: Functions and For Loops
+
+***Data: The Penguin dataset in R.***
+
+```{r}
+#| eval: false
+#| echo: true
+
+penguin <- penguins
+```
+
+
+### Question 13
+
+Write a function that takes the vector `body_mass` as input and returns a vector containing its minimum and maximum, **without using min and max**. (5 points)
+
+
+### Question 14
+
+Using the function you made above, use a for loop to compute the maximum and minimum value of `bill_len`, `bill_dep`, `flipper_len`, and `body_mass`. Store the results in a data frame. (5 points)
+
+#
+
+***Don't forget to save, render, commit, and push!***

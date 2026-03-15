@@ -1,0 +1,355 @@
+---
+title: "Lab 6 - ANSWER KEY"
+theme: journal
+toc: true
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 6. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - tidyverse.**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+# Answers
+
+**Remember to Set Seed**
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+set.seed(1991)
+```
+
+## Part 1
+
+### Exercise 1
+
+Use `rnorm()` to simulate 1,000 exam scores from a population with a mean of 75 and standard deviation of 10. Plot a histogram of your results and overlay a density curve. Does the shape look like what you'd expect? What happens if you change n to 50?
+
+```{r}
+#| echo: true
+
+n <- 1000          # change to 50 to see the difference
+mu <- 75
+sigma <- 10
+```
+
+```{r}
+dat <- rnorm(n, mu, sigma)
+head(dat)
+```
+
+```{r}
+ggplot() + geom_histogram(mapping = aes(x = dat, y = after_stat(density)), color = "white") + geom_density(mapping = aes(dat), color = "steelblue") + theme_linedraw() 
+```
+
+```{r}
+#| echo: true
+
+n <- 50          # change to 50 to see the difference
+mu <- 75
+sigma <- 10
+```
+
+```{r}
+dat <- rnorm(n, mu, sigma)
+head(dat)
+```
+
+```{r}
+ggplot() + geom_histogram(mapping = aes(x = dat, y = after_stat(density)), color = "white") + geom_density(mapping = aes(dat), color = "tomato") + theme_linedraw() 
+```
+
+*Changing `n` to 50 makes the distribution more leptokurtic or appear "less" normal like because of the small sample size*
+
+### Exercise 2
+
+Use `dnorm()` to compute the density of the normal distribution at x = 70, 75, and 80, given mean = 75 and sd = 10. Plot the full density curve from x = 40 to x = 110. Which value has the highest density and why?
+
+**75 has the highest density because it is the mean / mode value or area with most probability mass.**
+
+```{r}
+#| echo: true
+
+dnorm(70, mean = 75, sd = 10)
+```
+
+```{r}
+#| echo: true
+
+dnorm(75, mean = 75, sd = 10)
+```
+
+```{r}
+#| echo: true
+
+dnorm(80, mean = 75, sd = 10)
+```
+
+```{r}
+#| echo: true
+
+# Define the range and parameters
+x <- seq(40, 110, length.out = 100)
+y <- dnorm(x, mean = 75, sd = 10)
+
+# Create the plot
+plot(x, y, type = "l", lwd = 2, col = "blue",
+     main = "Normal Distribution (Mean=75, SD=10)",
+     xlab = "x", ylab = "Density")
+
+# Add points for the specific values
+points(c(70, 75, 80), dnorm(c(70, 75, 80), 75, 10), col = "red", pch = 19)
+
+```
+
+```{r}
+#| echo: true
+
+# Create a data frame for the x-axis range
+df <- data.frame(x = c(40, 110))
+
+# Plot using ggplot
+ggplot(df, aes(x = x)) +
+  stat_function(fun = dnorm, args = list(mean = 75, sd = 10), color = "steelblue", linewidth = 1) +
+  geom_point(data = data.frame(x = c(70, 75, 80), y = dnorm(c(70, 75, 80), 75, 10)), 
+             aes(x = x, y = y), color = "red", size = 3) +
+  labs(title = "Normal Distribution (Mean = 75, SD = 10)",
+       y = "Density", x = "x") +
+  theme_minimal()
+
+```
+
+### Exercise 3
+
+A standardized test has scores that are normally distributed with mean = 500 and sd = 100.
+
+* What proportion of students scored below 450?
+
+```{r}
+#| echo: true
+
+pnorm(450, mean = 500, sd = 100)
+```
+
+
+* What proportion scored above 650?
+
+```{r}
+#| echo: true
+
+pnorm(650, mean = 500, sd = 100, lower.tail = FALSE)
+```
+
+* What proportion scored between 400 and 600?
+
+```{r}
+#| echo: true
+
+pnorm(600, 500, 100) - pnorm(400, 500, 100)
+```
+
+## Part 2
+
+### Exercise 5
+
+A multiple choice quiz has 20 questions, each with 4 answer choices. A student guesses randomly on every question.
+
+* Use `dbinom()` to find the probability of getting exactly 5 correct.
+* Plot the full probability mass function (all outcomes 0–20). What does the shape tell you?
+
+**Getting exactly 5 correct.**
+
+```{r}
+#| echo: true
+
+dbinom(5, size = 20, prob = 0.25)
+
+```
+
+**Plot.**
+
+```{r}
+#| echo: true
+
+# Create data for all possible outcomes (0 to 20)
+quiz_data <- data.frame(
+  correct = 0:20,
+  prob = dbinom(0:20, size = 20, prob = 0.25)
+)
+
+# Plot the PMF
+ggplot(quiz_data, aes(x = correct, y = prob)) +
+  geom_col(fill = "steelblue", color = "white") +
+  scale_x_continuous(breaks = 0:20) +
+  labs(
+       x = "Number of Correct Answers",
+       y = "Probability") +
+  theme_minimal()
+```
+
+*The probablity of success is low at 25% (1/4) if one guesses randomly. So, the mass is centered at this likelihood 5/20 or 25%. 
+
+### Exercise 6
+
+Using `pbinom()`.
+
+* What is the probability of getting 8 or fewer correct by guessing?
+
+```{r}
+#| echo: true
+
+pbinom(8, size = 20, prob = 0.25)
+```
+
+
+* What is the probability of getting more than 10 correct?
+
+```{r}
+#| echo: true
+
+pbinom(10, size = 20, prob = 0.25, lower.tail = FALSE)
+```
+
+* Would getting 12 correct be surprising? Use a probability to support your answer.
+
+**YES - only 0.09%**
+
+```{r}
+#| echo: true
+
+pbinom(10, size = 20, prob = 0.25, lower.tail = FALSE)
+```
+
+## Part 3
+
+### Exercise 7
+
+A hospital emergency room receives an average of 8 patients per hour. This means lambda = 8 in the `Poisson` functions. (e.g., `dpois(x = COUNT, lambda = 8)`).
+
+* Use `dpois()` to find the probability of receiving exactly 8 patients in a given hour.
+
+```{r}
+#| echo: true
+
+dpois(x = 8, lambda = 8)
+```
+
+* Find the probability of receiving fewer than 5 patients using `ppois().`
+
+```{r}
+#| echo: true
+
+ppois(q = 4, lambda = 8)
+```
+
+* Simulate 500 hours of arrivals using `rpois()` and plot the result.
+
+```{r}
+#| echo: true
+
+sim_arrivals <- rpois(n = 500, lambda = 8)
+
+# Convert to data frame for plotting
+df_sim <- data.frame(arrivals = sim_arrivals)
+
+# Plot the results
+ggplot(df_sim, aes(x = arrivals)) +
+  geom_histogram(binwidth = 1, fill = "darkseagreen", color = "white") +
+  scale_x_continuous(breaks = seq(0, 20, 2)) +
+  labs(title = "Simulation of 500 Hours in the ER",
+       subtitle = "Poisson Distribution (lambda = 8)",
+       x = "Number of Patients per Hour",
+       y = "Frequency (Number of Hours)") +
+  theme_minimal()
+```
+
+## Part 4
+
+### Exercise 8
+
+A bus arrives at a stop at a uniformly random time between 0 and 30 minutes after you arrive.
+\
+**This is the uniform distribution.** 
+
+* Use `punif()` to find the probability you wait less than 10 minutes.
+
+```{r}
+#| echo: true
+
+punif(q = 10, min = 0, max = 30)
+```
+
+
+* Use `qunif()` to find the wait time that only 25% of riders experience or less.
+
+```{r}
+#| echo: true
+
+qunif(p = 0.25, min = 0, max = 30)
+```
+
+### Exercise 9
+
+The time between customer service calls follows an exponential distribution with a mean of 5 minutes (rate = 1/5). 
+\
+**This is the exponential distribution.** 
+
+* Use `pexp()` to find the probability the next call arrives within 3 minutes.
+
+```{r}
+#| echo: true
+
+pexp(q = 3, rate = 0.2)
+```
+
+
+* Use `qexp()` to find the time by which 90% of calls will have arrived.
+
+```{r}
+#| echo: true
+
+qexp(p = 0.90, rate = 0.2)
+```
+
+## Part 5: Synthesis
+
+### Exercise 10: 
+
+Simulate 10,000 data points using a distribution of your choosing. Find the 95% interval range (probs = 0.025-0.975) of your values. Plot the histogram, overlay a density, and label the minimum and maximum of your range. 
+
+**Can have any example here as long as it includes random data generation, the quantile function, and a plot with histogram and density.
+
+
+```{r}
+#| echo: true
+
+data <- data.frame(time = rexp(10000, rate = 0.2))
+
+# 2. Find the 95% interval range (2.5th and 97.5th percentiles)
+interval <- quantile(data$time, probs = c(0.025, 0.975))
+# 2.5%: ~0.12  |  97.5%: ~18.44
+
+# 3. Plot
+ggplot(data, aes(x = time)) +
+  geom_histogram(aes(y = ..density..), bins = 50, fill = "lavender", color = "white") +
+  geom_density(color = "darkorchid", size = 1) +
+  geom_vline(xintercept = interval, color = "red", linetype = "dashed") +
+  annotate("text", x = interval, y = 0.15, label = round(interval, 2), 
+           color = "red", vjust = -1, fontface = "bold") +
+  labs(title = "10,000 Simulated Exponential Arrivals",
+       subtitle = "Red lines indicate the 95% interval range",
+       x = "Time Between Calls (minutes)", y = "Density") +
+  theme_minimal()
+```
+

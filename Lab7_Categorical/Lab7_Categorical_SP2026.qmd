@@ -1,0 +1,79 @@
+---
+title: "Lab 7 - Categorical Data Analysis"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+***Due: Friday 3/20***
+
+Please complete all components described below.
+
+**To submit:**
+
+1. Clone your Week 10 Repo if you have not yet done so.
+
+2. Create a new Quarto document. Title it "NAME_Lab7_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 10. 
+
+6. Commit and Push.
+
+**Remember:**
+
+1.  Whenever you are using a package. You must open it. Remember `library()`. This must be in a code chunk in your document. 
+2.  If you are using data, you must import it inside a code chunk. You cannot just use the import data button in the `Environment` pane. 
+3.  Pay attention to your warnings and errors. They mean something.
+  - Remember, ggplot requires a `+` sign, not the pipe.
+4. Remember to `set.seed()` if necessary.
+
+## Instructions
+
+For this lab, you will be using a data set on edible plants collated from github. To access the data, use the following line of code:
+
+```{r}
+#| echo: true
+#| eval: false
+
+edible_plants <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-02-03/edible_plants.csv')
+
+```
+
+Go to [this website](https://github.com/rfordatascience/tidytuesday/blob/main/data/2026/2026-02-03/readme.md) to learn more about each column. Remember, this exercise is on *character* type data!
+
+This week, you are the master of your own analyses. Given the data, use the methods covered this week to analyze this mostly categorical data and *write a mini report.* You are writing this report in the quarto document. AKA - You will have code AND plain text / writing. Be organized!
+
+[**Please include the follow:**]{.underline}
+
+* Data munging / manipulation to select only the relevant data for your analyses. (1 point)
+
+* One bar plot (2 point)
+
+* One Cramer's V Analysis (2 point)
+
+* One Cross Tabulation (2 points)
+
+* One Chi Square **OR** Fisher's Exact Test (2 points)
+
+* One Multiple Correspondence Analysis (2 points)
+
+In your report, please include a brief write up for each analysis including, 
+
+* What question are you asking of the data or what type of information are you trying to glean from the data? (3 points)
+
+* Why did you choose a specific analysis (e.g., Fisher's vs. Chi-Square) (3 points)
+
+* What interpretations can be made? Use th output or visualizations to help. (3 points)
+
+**Total Score: 20 points**
+
+Have fun with this - this type of data exploration task is common when you work / intern at big survey companies. This does not need to be a formal 5-paragraph essay in Word. Use code + writing to interpret and answer all the questions. Just make sure you tell me why you are doing certain things and what you are trying to answer. 
+

@@ -1,0 +1,129 @@
+---
+title: "Lab 8 - Linear Regression"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+***Due: Monday 3/30 by end of day***
+
+Please complete all components described below.
+
+**To submit:**
+
+1. Clone your Week 11 Repo if you have not yet done so.
+
+2. Create a new Quarto document. Title it "NAME_Lab8_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 11. 
+
+6. Commit and Push.
+
+**Remember:**
+
+1.  Whenever you are using a package. You must open it. Remember `library()`. This must be in a code chunk in your document. 
+2.  If you are using data, you must import it inside a code chunk. You cannot just use the import data button in the `Environment` pane. 
+3.  Pay attention to your warnings and errors. They mean something.
+  - Remember, ggplot requires a `+` sign, not the pipe.
+4. Remember to `set.seed()` if necessary.
+
+## Exercise 1: The Baseline
+
+```{r}
+#| echo: true
+
+penguins <- penguins
+```
+
+
+Biologists want to estimate the weight of a penguin just by measuring its flipper. You will build a simple linear model to see if this is a reliable method.
+
+The equation you are estimating is:
+$$
+BodyMass=\beta_0+\beta_1(FlipperLength)+\epsilon
+$$
+
+### Step 1: Visualization
+
+Create a scatterplot mapping flipper_len to the x-axis and body_mass to the y-axis from the penguins dataset. Add a linear trend line.
+
+### Step 2: Modeling
+
+Fit the linear model using lm() and save it as an object called model_1. Then, [display]{.underline} the summary of the results.
+
+### Step 3: Interpretation 
+
+What is the value of the slope ($\beta_1$)? Explain what this number means in plain English, using the correct units (millimeters and grams).
+
+### Step 4: Model Fit 
+
+Report the Multiple $R^2$ value. Write one sentence explaining what the value is telling us?
+
+## Exercise 2: Multiple Regression
+
+```{r}
+#| echo: true
+
+cars <- mtcars
+```
+
+
+A car buyer wants to know how engine power and vehicle weight affect fuel efficiency. You will build a multiple regression model to parse out these overlapping effects using the mtcars dataset.
+
+The equation you are estimating is:
+$$
+MPG=\beta_0+\beta_1(Weight)+\beta_2(Horsepower)+\epsilon
+$$
+
+### Step 1: Modeling
+
+Fit a multiple regression model predicting mpg (miles per gallon) using wt (weight in 1000 lbs) and hp (horsepower). Save it as model_2 and display the results.
+
+### Step 2: The "Partial" Interpretation 
+
+Question: Look at the coefficient for horsepower ($\beta_2$). Explain what this specific number means while explicitly mentioning what happens with the weight variable.
+
+### Step 3: Diagnostics
+
+Generate a residuals vs. fitted plot for your model.(Hint: Use `plot(model_2)` OR use `resid(model_2)` and plot by hand using ggplot). Interpret your plot.
+
+### Step 4: Predictions
+
+1.  What is the predicted MPG of a car with 500 hp? (AKA holding wt constant)
+
+2.  What is the predicted MPG of a car weighing 7.0 (7000 lbs).
+
+3.  What is the predicted MPG of a car with 450 HP and weight 6.5 thousand lbs?
+
+## Exercise 3: Categorical Predictors
+
+We know flipper length predicts weight, but does a Gentoo penguin weigh the same as an Adelie penguin if they have the exact same flipper length? Let's add a categorical variable (text) to our model.
+
+The equation you are estimating is:
+$BodyMass=\beta_0+\beta_1(FlipperLength)+\beta_2(Species)+\epsilon$
+
+### Step 1: The Visual Setup
+
+Create the same scatterplot as you did in Exercise 1, but this time, color the points by species.
+
+### Step 2: Modeling
+
+Fit the multiple regression model predicting body_mass with both flipper_len and species. Save it as model_3 and display and interpret the results.
+
+### Step 3: Interpretation
+
+Question: Interpret the coefficient for the Gentoo species. If an Adelie and a Gentoo have the exact same flipper length, what is the expected difference in their body mass?
+
+  * Hint: Write out the regression equation for each species and then find the difference(s).
+  
+#
+
+***Don't forget to save, render, commit, and push!***

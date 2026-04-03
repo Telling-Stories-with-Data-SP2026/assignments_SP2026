@@ -1,0 +1,104 @@
+---
+title: "Lab 9 - Generalized Linear Models"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+***Due: Monday 4/6 by 5PM!***
+
+Please complete all components described below.
+
+The `chimpanzees` and `Kline` datasets will be found in the **Assignments Folder on Github**!
+
+**To submit:**
+
+1. Clone your Week 12 Repo if you have not yet done so.
+
+2. Create a new Quarto document. Title it "NAME_Lab9_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 11. 
+
+6. Commit and Push.
+
+**Remember:**
+
+1.  Whenever you are using a package. You must open it. Remember `library()`. This must be in a code chunk in your document. 
+2.  If you are using data, you must import it inside a code chunk. You cannot just use the import data button in the `Environment` pane. 
+3.  Pay attention to your warnings and errors. They mean something.
+  - Remember, ggplot requires a `+` sign, not the pipe.
+4. Remember to `set.seed()` if necessary.
+
+## Part 1 - Logistic Regression
+
+In this section you are using a famous `chimpanzee` dataset. The research question is: **Do chimpanzees participate in prosocial behavior?** 
+
+* Prosocial = positive or altruistic – an alleged unique human behavioral trait. 
+
+A chimpanzee can pull a lever to the left or right. If pulled to the left (1), a reward is given to the chimpanzee AND an additional chimpanzee next to them. If pulled to the right (0), only the initial chimpanzee gets the reward. TLDR – Will a chimpanzee do nice things for others?
+
+1.  Import the `chimpanzee` dataset from the `Data` folder.
+
+2.  Fit a logistic regression equation where the outcome is whether the chimp pulled left (1) or right (0) pulled_left and the predictor is what direction equates to prosociality prosoc_left.
+
+  * The y variable is `pulled_left`. The x variable (prosociality) is  `prosoc_left`.
+  
+3.  Make at second model with different predictors. I.E. - add another predictor in addition to `prosoc_left`. Compare the models. What model fits best? Why?
+  
+4.	Interpret your results on the **odds** scale.
+
+  * Are chimpanzees prosocial? Note, an increase an odds would indicate prosociality. 
+  
+## Part 2 - Poisson Regression
+
+The `Kline` dataset contains information about toolkit complexity in populations living on islands in SE Asia (Polynesia, Micronesia, Melanesia, etc.). I want to know if the total number of tools utilized is related to population size. In other words, does more people equal more, complex tools.  
+
+1.	Import the `Kline` dataset.
+
+2.  Create 2 new columns in the dataset. (Remember what tidyverse command does this!)
+
+  * Log_pop = `log(population)`
+
+  *	contact_high = `ifelse(contact == "high", 1, 0)`
+
+3.	Fit a poisson model where your outcome is total tools, and your explanatory variables are log_pop and contact. 
+
+4.  Summarize and interpret your results on the count / rate scale (NOT log odd or rate).
+
+5.  Are there any other variables you could think to add to provide for a better fit of the model? If so, add them, compare, and interpret the best model. 
+
+## Part 3 - Binomial Regression
+
+The snails data table in the `MASS` package presents the results of an experiment where snails of 2 species
+(`Species`) were exposed to 3 different temperature values (`Temp`) and 4 relative humidity values (`Rel.Hum`)
+for 1 to 4 weeks (`Exposure`). Twenty snails (`N`) were followed for each of the 96 possible combinations of these
+four variables; the `Deaths` variable indicates how many of them died during the experiment.
+
+In this example, you will code mortality as 1 and its absence (survival) as 0. To apply a binomial logistic
+regression to these data, the response in the formula (to the left of the ~) must be composed of two columns
+(number of 1 and number of 0) grouped with `cbind`. Here, the variable representing the number of 0 (the
+survivors) is obtained by subtracting Deaths from N.
+
+1. Load the `MASS` package. 
+
+2.  Save `snails` as an object - `snails <- snails`
+
+3.  Fit a binomial logistic regression model where you are predicting the probability of a snail dying based on species, exposure, relative humdity, and temperature.
+
+  *  Remember the setup to the left of the `~` will be `cbind(Deaths, N - Deaths)`.
+  
+4.  Interpret the output on the **odds** scale. 
+
+  * What factor(s) influence the likelihood of snails living or dying?
+
+#
+
+***Don't forget to save, render, commit, and push!***

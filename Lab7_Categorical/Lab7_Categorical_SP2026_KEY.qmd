@@ -1,5 +1,8 @@
 ---
 title: "Lab 7_Categorical_SP2026_KEY"
+embed-resources: true
+theme: journal
+toc: true
 format: html
 editor_options: 
   chunk_output_type: console

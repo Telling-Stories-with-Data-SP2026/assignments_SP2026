@@ -1,0 +1,362 @@
+---
+title: "Midterm Practical - Spring 2026 - KEY"
+embed-resources: true
+theme: journal
+toc: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of the Midterm. Note, I provide you one way to do the code - there are others. You must demonstrate you have the correct answer for full credit.**
+
+# Answers
+
+## Section 1
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+svad <- read.csv("data/svad_lb.csv")
+```
+
+
+### Question 1
+
+```{r}
+#| echo: true
+
+# Inspect the dataset
+
+glimpse(svad)
+```
+
+```{r}
+#| echo: true
+
+# Replace all -1 values with NA
+svad_clean <- svad %>%
+  mutate(across(where(is.numeric), ~ na_if(.x, -1)))
+
+# Check
+svad_clean %>%
+  summarise(across(where(is.numeric), ~ any(.x == -1, na.rm = TRUE)))
+```
+
+```{r}
+#| echo: true
+
+# Filter for female individuals and count missing values in measurement columns
+# Adjust 'sex' and female indicator based on actual column name/coding in dataset
+female_missing <- svad_clean %>%
+  filter(SEX == "F") %>%  
+  select(where(is.numeric)) %>%
+  summarise(across(everything(), ~ sum(is.na(.x)))) %>%
+  pivot_longer(everything(),
+               names_to  = "column",
+               values_to = "missing_count")
+```
+
+```{r}
+#| echo: true
+
+female_missing
+```
+
+### Question 2
+
+```{r}
+#| echo: true
+
+crural <- svad_clean %>%
+  filter(agey >= 0 & agey <= 5,
+         FDL_L >= 90) %>%
+  select(contains(c("FDL", "TDL", "FBDL", "HDL", "RDL", "UDL"))) %>%
+  mutate(crural = TDL_L / FDL_L)
+
+head(crural, 3)
+```
+
+### Question 3
+
+```{r}
+#| echo: true
+
+group1 <- svad_clean %>% filter(SEX != "NA") %>%
+  group_by(SEX) %>%
+  summarise(
+    across(
+      contains(c("FDL", "TDL", "FBDL", "HDL", "RDL", "UDL")),
+      list(
+        n   = ~ sum(!is.na(.x)),
+        mean = ~ mean(.x, na.rm = TRUE),
+        sd   = ~ sd(.x, na.rm = TRUE)
+      )
+    )
+  ) %>%
+  pivot_longer(
+    cols      = -SEX,
+    names_to  = c("measurement", "stat"),
+    names_sep = "_(?=[^_]+$)",  # splits on the LAST underscore
+    values_to = "value"
+  )
+
+head(group1)
+```
+
+### Question 4
+
+```{r}
+#| echo: true
+
+group2 <- svad_clean %>%
+  mutate(age_int = as.integer(agey)) %>%
+  group_by(age_int) %>%
+  summarise(
+    across(
+      contains(c("FMSB", "FDB", "TPB", "TMSB", "TDB")),
+      list(
+        n    = ~ sum(!is.na(.x)),
+        mean = ~ mean(.x, na.rm = TRUE),
+        sd   = ~ sd(.x, na.rm = TRUE)
+      )
+    )
+  ) %>%  pivot_longer(
+    cols      = -age_int,
+    names_to  = c("measurement", "stat"),
+    names_sep = "_(?=[^_]+$)",  # splits on the LAST underscore
+    values_to = "value"
+  )
+
+head(group2)
+```
+
+### Question 5
+
+```{r}
+#| echo: true
+
+svad_clean <- svad_clean %>%
+  rename_with(~ str_remove(.x, "_L$") %>% str_to_lower(),
+              ends_with("_L"))
+
+# Print column names to verify
+names(svad_clean)
+```
+
+## Section 2
+
+```{r}
+#| echo: true
+#| message: false
+
+palm <- read.csv("data/palm.csv")
+head(palm)
+```
+
+### Question 6
+
+```{r}
+#| echo: true
+
+palm_clean <- palm %>% na.omit()
+
+ggplot(palm_clean, aes(x = stem_solitary, y = max_stem_dia_cm, fill = stem_solitary)) +
+  geom_violin(alpha = 0.4) +
+  scale_fill_manual(values = c("non-solitary" = "steelblue", "solitary" = "tomato", "both" = "goldenrod")) +
+  labs(
+    title    = "Maximum Stem Diameter by Stem Growth Form",
+    subtitle = "Comparison of solitary and clustered palm species",
+    x        = "Stem Growth Form",
+    y        = "Maximum Stem Diameter (cm)",
+    fill     = "Growth Form"
+  ) +
+  theme_classic(base_size = 14) +
+  theme(
+    plot.title      = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle   = element_text(hjust = 0.5, color = "grey40"),
+    legend.position = "none",
+    axis.line       = element_line(color = "black"),
+    axis.text       = element_text(color = "black")
+  )
+```
+
+### Question 7
+
+There is a linear relationship between stem height and diameter with a taller stem generally associated with a larger diameter.
+
+```{r}
+#| echo: true
+
+palm_clean %>% ggplot(aes(max_stem_height_m, max_stem_dia_cm, colour = stem_solitary)) + geom_point() + geom_smooth(se=F, method = "lm") + theme_minimal()
+```
+
+### Question 8
+
+Could be anything within reason.
+
+```{r}
+#| echo: true
+
+palm_clean %>% ggplot(aes(average_fruit_length_cm, average_fruit_width_cm, colour = fruit_size_categorical)) + geom_point() + geom_smooth(se=F, method = "lm") + theme_minimal()
+```
+
+## Section 3
+
+```{r}
+#| echo: true
+#| message: false
+
+diwali <- read.csv("data/diwali.csv")
+head(diwali)
+```
+
+### Question 9
+
+#### Normality
+
+Data are non-normal.
+
+```{r}
+#| echo: true
+
+qqnorm(diwali$Amount, frame = F)
+qqline(diwali$Amount, col = "steelblue", lwd = 3)
+```
+
+```{r}
+#| echo: true
+
+ggplot(diwali, aes(x = Amount)) + theme_bw() + geom_histogram(aes(y = after_stat(density)), color = "black", fill = "white") + geom_density(fill = "steelblue", alpha = 0.4) + facet_grid(cols = vars(Zone))
+```
+
+#### Homoscedasticity
+
+Variance is NOT homoskedastic.
+
+```{r}
+#| echo: true
+
+car::leveneTest(Amount ~ Zone, data = diwali)
+```
+
+### Question 10
+
+While this may show "outliers", I see no reason to remove given they could be realistic.
+
+```{r}
+#| echo: true
+
+diwali %>% ggplot(aes(x = Zone, y = Amount)) + theme_bw() + geom_boxplot(outlier.colour = "red", outlier.size = 3)
+```
+
+### Question 11
+
+The data are non-normal with more than 2 groups. Therefore, I use the kruskal wallis test.
+
+There are statistically significant differences in spending by zone across *most* regional comparisons. 
+
+```{r}
+#| echo: true
+
+kruskal.test(Amount ~ Zone, data = diwali)
+```
+
+```{r}
+#| echo: true
+
+library(dunn.test)
+
+print(dunn.test(diwali$Amount, diwali$Zone, method = "holm"))
+```
+
+
+### Question 12
+
+The data are non-normal. The variance is homoscedastic. No outliers were removed. A man-whitney test is run because of the binary category.
+
+There are not statistically significant differences by marital status.
+
+```{r}
+#| echo: true
+
+ggplot(diwali, aes(x = Amount)) + theme_bw() + geom_histogram(aes(y = after_stat(density)), color = "black", fill = "white") + geom_density(fill = "steelblue", alpha = 0.4) + facet_grid(cols = vars(Marital_Status))
+```
+
+```{r}
+#| echo: true
+
+car::leveneTest(Amount ~ as.factor(Marital_Status), data = diwali)
+```
+
+```{r}
+#| echo: true
+
+diwali %>% ggplot(aes(x = as.factor(Marital_Status), y = Amount)) + theme_bw() + geom_boxplot(outlier.colour = "red", outlier.size = 3)
+```
+
+```{r}
+#| echo: true
+
+wilcox.test(Amount ~ Marital_Status, data = diwali)
+```
+
+## Section 4
+
+```{r}
+#| echo: true
+
+penguin <- penguins
+```
+
+### Question 13
+
+```{r}
+#| echo: true
+
+min_max <- function(body_mass) {
+  minimum <- sort(body_mass, na.last = NA)[1]
+  maximum <- sort(body_mass, na.last = NA)[length(sort(body_mass, na.last = NA))]
+  
+  return(c(minimum = minimum, maximum = maximum))
+}
+
+# Example usage
+min_max(penguin$body_mass)
+
+# Check
+min(penguin$body_mass, na.rm = T)
+max(penguin$body_mass, na.rm = T)
+```
+
+### Question 14
+
+```{r}
+#| echo: true
+
+# Define the columns to iterate over
+cols <- c("bill_len", "bill_dep", "flipper_len", "body_mass")
+
+# Empty data frame to store results
+results <- data.frame(
+  variable = character(),
+  minimum  = numeric(),
+  maximum  = numeric()
+)
+
+# For loop
+for (col in cols) {
+  vals    <- min_max(penguins[[col]])
+  results <- rbind(results, data.frame(
+    variable = col,
+    minimum  = vals["minimum"],
+    maximum  = vals["maximum"],
+    row.names = NULL
+  ))
+}
+
+print(results)
+```
+

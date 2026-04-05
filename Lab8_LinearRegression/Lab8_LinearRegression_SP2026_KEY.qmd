@@ -1,0 +1,160 @@
+---
+title: "Lab 8 - LinearRegression_SP2026_KEY"
+embed-resources: true
+theme: journal
+toc: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 8. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - linear regression.**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+# Answers
+
+## Exercise 1
+
+```{r}
+#| echo: true
+#| message: false
+library(tidyverse)
+penguins <- penguins
+```
+
+### Step 1
+
+```{r}
+#| echo: true
+
+penguins %>% ggplot(aes(flipper_len, body_mass)) + geom_point() + geom_smooth(method = "lm", se=F) + theme_minimal()
+```
+
+### Step 2
+
+```{r}
+#| echo: true
+
+model_1 <- lm(body_mass ~ flipper_len, data = penguins)
+summary(model_1)
+```
+
+### Step 3
+
+$\beta_1$ is equal to 49.686 grams. This means that for every 1 unit increase in flipper lenght (millimeters), body mass increases by 49.686 grams.
+
+### Step 4
+
+The multiple $R^2$ is 0.759. The adjust $R^2$ is 0.7583. This means 75% of the variation in body mass can be explained by flipper length. 
+
+## Exercise 2
+
+```{r}
+#| echo: true
+
+cars <- mtcars
+```
+
+### Step 1
+
+```{r}
+#| echo: true
+
+model_2 <- lm(mpg ~ wt + hp, data = cars)
+summary(model_2)
+```
+
+### Step 2
+
+Holding the weight variable constant, for every 1 unit increase in horsepower, there is a decrease in miles per gallon by approximately 0.03 miles. 
+
+### Step 3
+
+Generally, the error or variance is relative homogenous / homoscedastic. 
+
+```{r}
+#| echo: true
+
+# plot(model_2) OR see below
+
+# Extract fitted values and residuals
+model_2_diag <- data.frame(
+  fitted    = fitted(model_2),
+  residuals = residuals(model_2)
+)
+
+ggplot(model_2_diag, aes(x = fitted, y = residuals)) +
+  geom_point(shape = 21, fill = "steelblue", color = "black", size = 3, alpha = 0.8) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red", linewidth = 0.8) +
+  labs(
+    title = "Residual Plot",
+    subtitle = "Model: mpg ~ wt + hp",
+    x = "Fitted Values",
+    y = "Residuals"
+  ) +
+  theme_classic(base_size = 14) +
+  theme(
+    plot.title    = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5, color = "grey40"),
+    axis.text     = element_text(color = "black")
+  )
+```
+
+### Step 4
+
+Note - 0 hp or 0 wt does not make sense. Common practice is to set equal to a mean value when holding 'constant.'
+
+```{r}
+#| echo: true
+
+# 1. Predicted MPG for a car with 500 hp (using mean wt as reference)
+predict(model_2, newdata = data.frame(wt = mean(mtcars$wt), hp = 500))
+
+# 2. Predicted MPG for a car weighing 7.0 (using mean hp as reference)
+predict(model_2, newdata = data.frame(wt = 7.0, hp = mean(mtcars$hp)))
+
+# 3. Predicted MPG for a car with 450 hp and weight 6.5
+predict(model_2, newdata = data.frame(wt = 6.5, hp = 450))
+```
+
+## Exercise 3
+
+### Step 1
+
+```{r}
+#| echo: true
+
+penguins %>% ggplot(aes(flipper_len, body_mass, color = species)) + geom_point() + geom_smooth(method = "lm", se=F) + theme_minimal()
+```
+
+### Step 2
+
+```{r}
+#| echo: true
+
+model_3 <- lm(body_mass ~ flipper_len + species, data = penguins)
+summary(model_3)
+```
+
+### Step 3
+
+Because *Adelie* is the reference species, if we hold flipper length constant, then *Gentoo* body mass is 266.810 grams greater than *Adelie* body mass. Therefore, the expected difference is 266.810.
+
+```{r}
+#| echo: true
+
+# Adelie
+adelie <- -4031.477 + 266.810 + 40.705
+
+# Gentoo
+gentoo <- -4031.477 + 40.705
+
+adelie - gentoo
+```
+

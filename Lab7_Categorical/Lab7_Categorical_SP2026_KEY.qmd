@@ -1,0 +1,116 @@
+---
+title: "Lab 7_Categorical_SP2026_KEY"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 7. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - categorical data analysis**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+# Answers
+
+Remember, this week I asked you to write a mini report with embedded text. You each may have separate research question(s), but full credit will go to those who utilized the skills learned from class in combination with valid interpretation. 
+
+```{r}
+#| echo: true
+
+edible_plants <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-02-03/edible_plants.csv')
+
+head(edible_plants)
+
+```
+
+## Research Questions
+
+1. What is the relationship between the amount of sunlight a plant prefers and the temperature class one may prefer?
+
+2. What characteristics of edible plants covary together?
+
+### Data Munging
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+subset <- edible_plants %>%
+  select(where(is.character))
+
+bivariate <- subset %>% select(sunlight, temperature_class) %>% drop_na()
+
+multivariate <- subset %>% select(cultivation, sunlight, water, nutrients, soil, season, temperature_class) %>% drop_na()
+```
+
+### Bar Plot
+
+```{r}
+#| echo: true
+
+bivariate %>% ggplot() + geom_bar(aes(x=temperature_class, fill=sunlight), position="dodge") + theme_bw() + labs(x="Temperature Class", y="Count", fill="Sunlight") + theme(legend.position = "top")
+```
+
+### Cramer's V
+
+There is a ***moderate association*** between sunlight and temperature class. The Cramer's V values is 0.1961 with a degrees of freedom equal to 5.
+
+```{r}
+#| echo: true
+
+tab <- table(bivariate$sunlight, bivariate$temperature_class)
+tab
+
+rcompanion::cramerV(tab)
+
+# Degrees of Freedom
+min(nrow(tab) - 1, ncol(tab) - 1)
+```
+
+### Cross Tabulation
+
+```{r}
+gmodels::CrossTable(bivariate$sunlight, bivariate$temperature_class)
+```
+
+### Fisher's Test
+
+Here, I choose to use a Fisher's Test because the data are sparse in certain categories. In other words, there are less than 5 counts across greater than 20% of the possible combinations of values. 
+
+There is a statistically significant association between sunlight required and temperature hardiness.
+
+```{r}
+#| echo: true
+
+janitor::fisher.test(bivariate$sunlight, bivariate$temperature_class, simulate.p.value=T)
+```
+
+### Multiple Correspondence Analysis
+
+```{r}
+#| echo: true
+#| message: false
+
+library(factoextra)
+library(FactoMineR)
+
+res_mca <- MCA(multivariate)
+```
+
+```{r}
+#| echo: true
+fviz_mca_ind(res_mca, ggtheme=theme_bw(), habillage = as.factor(multivariate$cultivation), addEllipses = T)
+
+```
+
+### Interpretations
+
+1. In the bivariate analysis, there does appear to be a statistically significant relationship between sunlight requirements and temperature hardiness. Caution should be taken because of the small sample sizes across the categories. 
+
+2.  The MCA analyses corroborate the above analyses and show that there is a relationship between water and nutrient demands, the soil types and season of planting, and it appears most cultivation(s) follow these patterns. That said, sunlight and temperature appear slightly offset indicating variability across categories. There is no clear pattern by cultivation type as all categories / ellipses overlap in the individual plot with ellipses.

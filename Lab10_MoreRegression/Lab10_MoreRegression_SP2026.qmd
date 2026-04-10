@@ -209,18 +209,7 @@ Exponentiate the coefficients to obtain incidence rate ratios (IRR). What combin
 # YOUR CODE HERE
 ```
 
-### Step 4: Check dispersion
-
-Compute the ratio of residual deviance to residual degrees of freedom. Is overdispersion present? Would a different model be warranted?
-
-```{r}
-#| label: dataset3-dispersion
-
-# Dispersion check
-# YOUR CODE HERE
-```
-
-### Step 5: Written interpretation
+### Step 4: Written interpretation
 
 *Summarize the model results. Which wool/tension combination produces the most breaks? Report the relevant IRR and interpret it in a complete sentence. (3–4 sentences)*
 
@@ -252,14 +241,11 @@ data("NMES1988", package = "AER")
 fit4_initial <- # YOUR CODE HERE
 
 summary(fit4_initial)
-
-# Check dispersion ratio (residual deviance / residual df)
-# YOUR CODE HERE
 ```
 
 ### Step 3: Reconsider and refit
 
-Based on your dispersion check, is the initial model appropriate? Fit a better-suited model.
+Is the initial model appropriate? Fit a better-suited model.
 
 ```{r}
 #| label: dataset4-refit
@@ -292,9 +278,9 @@ AIC(fit4_initial, fit4_final)
 
 **Source:** `DAAG::orings` — data from 23 Space Shuttle launches prior to the Challenger disaster (January 28, 1986).
 
-**Outcome (y):** `damaged` out of a total of 6 O-rings per launch
+**Outcome (y):** `Total` (total O-ring incidents) out of 6 O-rings per launch. The dataset also contains `Erosion` and `Blowby` as component incident types.
 
-**Predictors (x):** `Temperature`, `Pressure`
+**Predictors (x):** `Temperature`
 
 ### Step 1: Identify the model
 
@@ -311,8 +297,10 @@ data("orings", package = "DAAG")
 head(orings)
 str(orings)
 
-# What does the distribution of damage look like?
-# YOUR CODE HERE
+# Plot Total incidents vs Temperature
+plot(orings$Temperature, orings$Total / 6,
+     xlab = "Temperature (°F)", ylab = "Proportion of O-rings with incidents",
+     main = "O-ring incidents vs. launch temperature", pch = 19)
 ```
 
 ### Step 3: Fit the model
@@ -321,7 +309,7 @@ str(orings)
 #| label: dataset5-model
 
 # Fit the logistic binomial model
-# Hint: the outcome is specified as cbind(damaged, 6 - damaged)
+# Hint: the outcome is specified as cbind(Total, 6 - Total)
 fit5 <- # YOUR CODE HERE
 
 summary(fit5)
@@ -336,9 +324,13 @@ On January 28, 1986, the temperature at launch was 31°F — far below any tempe
 #| label: dataset5-prediction
 
 # Create a new data frame for prediction
-launch_day <- data.frame(Temperature = 31, Pressure = 200)
+launch_day <- data.frame(Temperature = 31)
 
-# Predict the probability of O-ring damage
+# Predict the probability of an O-ring incident (type = "response")
+pred_prob <- predict(fit5, newdata = launch_day, type = "response")
+pred_prob
+
+# What is the probability that at least one of the 6 O-rings has an incident?
 # YOUR CODE HERE
 ```
 

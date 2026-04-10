@@ -1,0 +1,359 @@
+---
+title: "Lab 10 Regression Final"
+subtitle: "ANTH 3900 / 5203"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    toc-title: "Datasets"
+    theme: cosmo
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+  eval: false
+---
+
+<span style="color: red;">**Note: If you want to use this qmd document to complete all analyses, you must change `eval: false` to `eval: true` in the header information.**</span>
+
+\
+
+***Due: Wednesday 4/15 by 10AM!***
+
+Please complete all components described below.
+
+**To submit:**
+
+1. Clone your Week 13 Repo if you have not yet done so.
+
+2. Create a new Quarto document. Title it "NAME_Lab10_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 13. 
+
+6. Commit and Push.
+
+## Instructions
+
+For each of the five datasets below, you are given an outcome variable (y) and a set of predictors (x). **Your first task for every dataset is to identify the appropriate regression model from those covered in lecture and justify your choice in writing before running any code.** No hints are given about which model to use.
+
+Your submission should be a rendered `.html` file knitted from this `.qmd` document. For each dataset you must provide:
+
+1. A written paragraph identifying the regression type and your justification
+2. All R code used to fit and evaluate the model
+3. Written interpretation of results (in plain language where requested)
+
+**Required packages:** Install these before beginning.
+
+```{r}
+#| label: setup
+
+library(MASS)       # Pima.tr, glm.nb
+library(AER)        # Affairs, NMES1988
+library(DAAG)       # orings
+library(margins)    # marginal effects for probit
+library(tidyverse)  # optional but recommended
+```
+
+---
+
+## Dataset 1: Pima Indians Diabetes
+
+**Source:** `MASS::Pima.tr` — 200 Pima Indian women screened for Type II diabetes.
+
+**Outcome (y):** `type` — whether the patient tested positive for diabetes
+
+**Predictors (x):** `npreg`, `glu`, `bp`, `skin`, `bmi`, `ped`, `age`
+
+### Step 1: Identify the model
+
+*Replace this text with your written justification. What type of variable is `type`? What regression model is appropriate and why? (3–5 sentences)*
+
+### Step 2: Fit the model
+
+Fit a model predicting `type` from `glu`, `bmi`, `bp`, and `age`.
+
+```{r}
+#| label: dataset1-model
+
+data("Pima.tr", package = "MASS")
+
+# Examine the outcome variable
+# YOUR CODE HERE
+
+# Fit the model
+fit1 <- # YOUR CODE HERE
+
+summary(fit1)
+```
+
+### Step 3: Odds ratios
+
+Exponentiate the coefficients to obtain odds ratios. Which predictors are statistically significant?
+
+```{r}
+#| label: dataset1-or
+
+# Exponentiate coefficients
+# YOUR CODE HERE
+```
+
+### Step 4: Written interpretation
+
+*In a complete sentence written for a non-statistical audience, interpret the odds ratio for `glu`. What does a one-unit increase in glucose level mean for the odds of a diabetes diagnosis?*
+
+---
+
+## Dataset 2: Extramarital Affairs
+
+**Source:** `AER::Affairs` — 601 respondents from a 1977 survey on extramarital affairs (Fair, 1978).
+
+**Outcome (y):** `had_affair` — you will need to create this binary variable from `affairs`
+
+**Predictors (x):** `gender`, `age`, `yearsmarried`, `children`, `religiousness`, `education`, `rating`
+
+### Step 1: Create the outcome variable
+
+```{r}
+#| label: dataset2-setup
+
+data("Affairs", package = "AER")
+
+# Create binary outcome: 1 if affairs > 0, else 0
+Affairs$had_affair <- # YOUR CODE HERE
+
+# Check your recoding
+table(Affairs$had_affair)
+```
+
+### Step 2: Identify the model and justify your choice
+
+*Replace this text with your written justification. What regression model(s) could be applied to a binary outcome? Under what theoretical assumption would a probit link be preferred over a logit link? (4–6 sentences)*
+
+### Step 3: Fit both models and compare
+
+Fit both a logistic and a probit model, then compare AIC values.
+
+```{r}
+#| label: dataset2-models
+
+# Logistic regression
+fit2_logit <- # YOUR CODE HERE
+
+# Probit regression
+fit2_probit <- # YOUR CODE HERE
+
+# Compare AIC
+AIC(fit2_logit, fit2_probit)
+```
+
+### Step 4: Marginal effects
+
+Using the `margins` package, compute average marginal effects for the probit model. Report the results for `rating` and `religiousness`.
+
+```{r}
+#| label: dataset2-margins
+
+# Marginal effects
+# YOUR CODE HERE
+```
+
+### Step 5: Written interpretation
+
+*Interpret one marginal effect (either `rating` or `religiousness`) on the probability scale in plain language. What does this effect mean practically? (2–3 sentences)*
+
+---
+
+## Dataset 3: Warp Breaks
+
+**Source:** `datasets::warpbreaks` — 54 observations of the number of warp breaks per loom when weaving wool yarn.
+
+**Outcome (y):** `breaks` — count of warp thread breaks
+
+**Predictors (x):** `wool` (type A or B), `tension` (Low, Medium, High)
+
+### Step 1: Identify the model
+
+*Replace this text with your written justification. What type of variable is `breaks`? Why is ordinary least squares (OLS) regression inappropriate here? What model is appropriate and why? (3–5 sentences)*
+
+### Step 2: Fit the model
+
+Fit a model including the interaction between `wool` and `tension`.
+
+```{r}
+#| label: dataset3-model
+
+data("warpbreaks")
+
+# Examine the outcome
+# YOUR CODE HERE
+
+# Fit model with interaction
+fit3 <- # YOUR CODE HERE
+
+summary(fit3)
+```
+
+### Step 3: Incidence rate ratios
+
+Exponentiate the coefficients to obtain incidence rate ratios (IRR). What combination of wool type and tension level is associated with the most breaks?
+
+```{r}
+#| label: dataset3-irr
+
+# Exponentiate coefficients
+# YOUR CODE HERE
+```
+
+### Step 4: Check dispersion
+
+Compute the ratio of residual deviance to residual degrees of freedom. Is overdispersion present? Would a different model be warranted?
+
+```{r}
+#| label: dataset3-dispersion
+
+# Dispersion check
+# YOUR CODE HERE
+```
+
+### Step 5: Written interpretation
+
+*Summarize the model results. Which wool/tension combination produces the most breaks? Report the relevant IRR and interpret it in a complete sentence. (3–4 sentences)*
+
+---
+
+## Dataset 4: Physician Office Visits
+
+**Source:** `AER::NMES1988` — 4,406 individuals from the 1987–88 National Medical Expenditure Survey.
+
+**Outcome (y):** `visits` — number of physician office visits in the past year
+
+**Predictors (x):** `hospital`, `health`, `chronic`, `gender`, `school`, `insurance`
+
+### Step 1: Identify the model (initial)
+
+*Replace this text with your initial thoughts. What type of variable is `visits`? What model would you reach for first? (2–3 sentences)*
+
+### Step 2: Fit an initial model and check assumptions
+
+```{r}
+#| label: dataset4-poisson
+
+data("NMES1988", package = "AER")
+
+# Examine the outcome
+# YOUR CODE HERE
+
+# Fit initial model
+fit4_initial <- # YOUR CODE HERE
+
+summary(fit4_initial)
+
+# Check dispersion ratio (residual deviance / residual df)
+# YOUR CODE HERE
+```
+
+### Step 3: Reconsider and refit
+
+Based on your dispersion check, is the initial model appropriate? Fit a better-suited model.
+
+```{r}
+#| label: dataset4-refit
+
+# Fit the improved model
+fit4_final <- # YOUR CODE HERE
+
+summary(fit4_final)
+
+# Compare AIC
+AIC(fit4_initial, fit4_final)
+```
+
+### Step 4: Interpret the IRR for `chronic`
+
+```{r}
+#| label: dataset4-irr
+
+# Exponentiate coefficients from the final model
+# YOUR CODE HERE
+```
+
+### Step 5: Written interpretation
+
+*In 2–3 sentences, explain to a public health researcher why the final model was the right choice for this outcome. Then interpret the IRR for `chronic` in plain language.*
+
+---
+
+## Dataset 5: Space Shuttle O-Ring Failures
+
+**Source:** `DAAG::orings` — data from 23 Space Shuttle launches prior to the Challenger disaster (January 28, 1986).
+
+**Outcome (y):** `damaged` out of a total of 6 O-rings per launch
+
+**Predictors (x):** `Temperature`, `Pressure`
+
+### Step 1: Identify the model
+
+*Replace this text with your written justification. How does this outcome differ from a standard binary (0/1) outcome? What regression model handles this structure and why? How does it differ from the binary logistic regression you used in Datasets 1 and 2? (4–6 sentences)*
+
+### Step 2: Examine the data
+
+```{r}
+#| label: dataset5-setup
+
+data("orings", package = "DAAG")
+
+# Examine the data structure
+head(orings)
+str(orings)
+
+# What does the distribution of damage look like?
+# YOUR CODE HERE
+```
+
+### Step 3: Fit the model
+
+```{r}
+#| label: dataset5-model
+
+# Fit the logistic binomial model
+# Hint: the outcome is specified as cbind(damaged, 6 - damaged)
+fit5 <- # YOUR CODE HERE
+
+summary(fit5)
+exp(coef(fit5))
+```
+
+### Step 4: Predict the probability of failure at 31°F
+
+On January 28, 1986, the temperature at launch was 31°F — far below any temperature in the training data.
+
+```{r}
+#| label: dataset5-prediction
+
+# Create a new data frame for prediction
+launch_day <- data.frame(Temperature = 31, Pressure = 200)
+
+# Predict the probability of O-ring damage
+# YOUR CODE HERE
+```
+
+### Step 5: Written interpretation
+
+*Write a 3–4 sentence summary of what this analysis tells us about the decision to launch the Challenger. Your summary should be written for a general audience with no statistical background. What does the predicted probability at 31°F suggest?*
+
+---
+
+## Submission Checklist
+
+Before submitting, confirm:
+
+- [ ] Each dataset section includes a **written justification** of the model choice *before* any code
+- [ ] All code chunks run without errors in a clean R session
+- [ ] Odds ratios / IRRs are reported and interpreted where requested
+- [ ] All written interpretation questions are answered in full sentences
+- [ ] The document is rendered to `.html` and submitted via the github portal

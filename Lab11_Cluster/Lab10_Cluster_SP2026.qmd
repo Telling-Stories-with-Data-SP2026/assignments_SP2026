@@ -1,0 +1,103 @@
+---
+title: "Lab 11 - Clustering"
+subtitle: "ANTH 3900 / 5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+***Due: Wednesday 4/22 by 5PM!***
+
+Please complete all components described below.
+
+**To submit:**
+
+1. Clone your Week 14 Repo if you have not yet done so.
+
+2. Create a new Quarto document. Title it "NAME_Lab11_Spring2026". 
+
+3. At the very top of the document under title and author please be sure to put `embed-resources: true` AND `echo: true`. **This is a requirement each week!**
+
+4. Complete all steps below.
+
+5. Render and save. Make sure it is saved in the same folder as the RProject file for Week 14. 
+
+6. Commit and Push.
+
+**Remember:**
+
+1.  Whenever you are using a package. You must open it. Remember `library()`. This must be in a code chunk in your document. 
+
+2.  If you are using data, you must import it inside a code chunk. You cannot just use the import data button in the `Environment` pane. 
+
+3.  Pay attention to your warnings and errors. They mean something.
+  - Remember, ggplot requires a `+` sign, not the pipe.
+
+4. Remember to `set.seed()` if necessary.
+
+## Part 1 - K-Means
+
+Please use the `howells` dataset found in the data folder under the assignment. 
+
+1. Import the data
+
+2.  Filter out ***5*** populations. AKA - Select only 5 groups from the `Population` columns. 
+
+3.  Complete a K-Means clustering. 
+    * Remember to scale and remove NAs.
+    * Use **at least 20** features (i.e., 20 numeric columns).
+    * Determine best number of clusters. Justify this determination. 
+    * Run the clustering algorithm. 
+    * Visualize the results. 
+    * Interpret.
+  
+## Part 2 - K-Mediods
+
+Please use the `BreastCancer` dataset from the mlbench package.
+
+```{r}
+#| echo: true
+#| eval: false
+
+install.packages("mlbench") # only run once
+library(mlbench)
+data("BreastCancer")
+```
+
+I am interested in whether tumor traits cluster by benign or malignant type. 
+
+1. Calculate the dissimilarity matrix of all variables EXCEPT the `ID` variable and the variable of interest `Class`.
+2.  Complete K-Mediods Clustering. 
+3. Visualize with `fviz_clust`.
+4. Interpret. 
+
+## Part 3 - Hierarchical Clusters
+
+Please use the `carnivora` dataset from the ape package.
+
+```{r}
+#| echo: true
+#| eval: false
+
+install.packages("ape") # only run once
+library(ape)
+data("carnivora")
+```
+
+1. Select only Column 6 to Column 12 for the analysis. Note, you may use other columns later for interpretation.
+
+2. Remove NAs and Scale Data. 
+
+3. Cluster the data using hierarchical clustering. 
+    * Decide on agglomerative vs. divisive. Defend you choice. 
+    * Choice a comparison method. 
+    * Visualize your results. 
+  
+4. Can you determine if any clusters correspond to any of the factor classes (i.e., Family or Superfamily)? Note, each leaf will be represented by a number - this number is the row index number.
+
+#
+
+***Don't forget to save, render, commit, and push!***

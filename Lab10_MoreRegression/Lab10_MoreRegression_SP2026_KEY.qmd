@@ -1,0 +1,283 @@
+---
+title: "Lab 10 - Regression Final — ANSWER KEY"
+subtitle: "ANTH 3900 / 5203"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    toc-title: "Datasets"
+    theme: cosmo
+    code-fold: show
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: setup
+
+library(MASS)
+library(AER)
+library(DAAG)
+library(margins)
+library(tidyverse)
+```
+
+---
+
+## Dataset 1: Pima Indians Diabetes
+
+**Correct model: Binary Logistic Regression** (`family = binomial(link = "logit")`)
+
+### Justification (model answer)
+
+> The outcome variable `type` is binary — it takes values `Yes` or `No` indicating a positive diabetes diagnosis. Because the outcome is categorical with two levels, ordinary linear regression is inappropriate (it can produce predicted probabilities outside [0, 1] and violates normality assumptions). Binary logistic regression models the log odds of the outcome as a linear function of the predictors using a logit link function, making it the correct choice. There is no strong theoretical reason to prefer a probit link here, so logistic regression is the default.
+
+```{r}
+#| label: dataset1-model
+
+data("Pima.tr", package = "MASS")
+
+# Examine the outcome
+str(Pima.tr$type)
+table(Pima.tr$type)
+
+# Ensure type is a factor coded 0/1
+Pima.tr$type_bin <- ifelse(Pima.tr$type == "Yes", 1, 0)
+
+fit1 <- glm(type_bin ~ glu + bmi + bp + age,
+            data = Pima.tr,
+            family = binomial(link = "logit"))
+
+summary(fit1)
+```
+
+```{r}
+#| label: dataset1-or
+
+# Odds ratios with 95% confidence intervals
+exp(cbind(OR = coef(fit1), confint(fit1)))
+```
+
+**Significant predictors:** `glu` and `bmi` are highly significant (p < 0.001); `age` is marginally significant. `bp` is not significant in this reduced model.
+
+**Sample interpretation for `glu`:**
+
+> For every one-unit increase in plasma glucose concentration, the odds of testing positive for diabetes increase by approximately 4% (OR ≈ 1.04), holding all other predictors constant.
+
+---
+
+## Dataset 2: Extramarital Affairs
+
+**Correct model: Binary Logistic Regression or Probit Regression** (both acceptable; task requires fitting and comparing both)
+
+### Justification (model answer)
+
+> After recoding `affairs > 0` as a binary indicator, the outcome `had_affair` takes values 0 (no affair) or 1 (at least one affair). Both logistic and probit regression are appropriate for binary outcomes; they differ in the assumed distribution of the underlying latent distribution. Logistic regression assumes the data follows a logistic distribution, while probit assumes it follows a standard normal distribution. In practice, the two models will yield similar results.
+
+```{r}
+#| label: dataset2-setup
+
+data("Affairs", package = "AER")
+
+Affairs$had_affair <- as.integer(Affairs$affairs > 0)
+table(Affairs$had_affair)
+```
+
+```{r}
+#| label: dataset2-models
+
+fit2_logit <- glm(had_affair ~ gender + age + yearsmarried + children +
+                    religiousness + education + rating,
+                  data = Affairs,
+                  family = binomial(link = "logit"))
+
+fit2_probit <- glm(had_affair ~ gender + age + yearsmarried + children +
+                     religiousness + education + rating,
+                   data = Affairs,
+                   family = binomial(link = "probit"))
+
+AIC(fit2_logit, fit2_probit)
+```
+
+**Result:** AIC values are very close (within ~1–2 units). Neither model is meaningfully better — this is expected and is itself an instructive finding.
+
+```{r}
+#| label: dataset2-margins
+
+mfx <- summary(margins(fit2_probit))
+mfx
+```
+
+**Key marginal effects to highlight:**
+
+- `rating` (marriage happiness): Strongly negative AME — higher marital satisfaction is associated with a meaningfully lower probability of having an affair.
+- `religiousness`: Negative AME — more religious individuals have a lower probability of reporting an affair.
+
+**Sample interpretation for `rating`:**
+
+> Each one-unit increase in self-reported marital happiness (on a 1–5 scale) is associated with approximately a 9 percentage-point decrease in the probability of having had an affair, holding all other variables constant.
+
+**Grading note:** Students must use `pnorm()` or `margins()` — raw probit coefficients cannot be directly interpreted as probability changes. Deduct points if a student interprets raw coefficients as probability effects.
+
+---
+
+## Dataset 3: Warp Breaks
+
+**Correct model: Poisson Regression** (`family = poisson`)
+
+*(Students who detect overdispersion and argue for negative binomial receive full credit with appropriate justification)*
+
+### Justification (model answer)
+
+> The outcome `breaks` is a non-negative integer count — the number of times yarn breaks during weaving. OLS is inappropriate because (1) the outcome is bounded at zero and right-skewed, (2) OLS can predict negative counts, and (3) OLS assumes constant variance, which count data typically violates. Poisson regression is designed for count outcomes; it models the log of the expected count as a linear function of predictors, assumes variance equals the mean, and ensures non-negative predictions.
+
+```{r}
+#| label: dataset3-model
+
+data("warpbreaks")
+
+# Examine outcome
+hist(warpbreaks$breaks, main = "Distribution of warp breaks", xlab = "Breaks")
+mean(warpbreaks$breaks); var(warpbreaks$breaks)
+
+fit3 <- glm(breaks ~ wool * tension,
+            data = warpbreaks,
+            family = poisson)
+
+summary(fit3)
+```
+
+```{r}
+#| label: dataset3-irr
+
+round(exp(coef(fit3)), 3)
+```
+
+**Interpreting key IRRs:**
+
+- Intercept (`woolA:tensionL` reference group): expected count ≈ 44.6 breaks
+- `woolB`: IRR ≈ 0.84 — switching to wool B (at Low tension) reduces expected breaks by ~16%
+- `tensionM`: IRR ≈ 0.63 — Medium tension reduces breaks by ~37% vs. Low (for wool A)
+- `tensionH`: IRR ≈ 0.43 — High tension reduces breaks by ~57% vs. Low (for wool A)
+
+**Combination with the most breaks:** Wool A at Low tension (the reference group), with ~44.6 expected breaks.
+
+---
+
+## Dataset 4: Physician Office Visits
+
+**Correct model: Negative Binomial Regression** (`MASS::glm.nb()`)
+
+### Justification (model answer)
+
+> The outcome `visits` is a count variable recording the number of physician visits in a year. A first instinct is to use Poisson regression, which requires the mean and variance of the outcome to be approximately equal (equidispersion). However, checking the dispersion ratio after fitting a Poisson model reveals severe overdispersion — the variance far exceeds the mean. This is common in healthcare utilization data, where a small number of patients drive a very large number of visits. The negative binomial model relaxes the equidispersion assumption by including an additional dispersion parameter, making it a much better fit for this outcome.
+
+```{r}
+#| label: dataset4-poisson
+
+data("NMES1988", package = "AER")
+
+# Examine outcome
+summary(NMES1988$visits)
+var(NMES1988$visits) / mean(NMES1988$visits)  # raw variance-to-mean ratio
+
+fit4_poisson <- glm(visits ~ hospital + health + chronic + gender + school + insurance,
+                    data = NMES1988,
+                    family = poisson)
+
+# Dispersion check
+fit4_poisson$deviance / fit4_poisson$df.residual
+```
+
+**Expected result:** Raw variance/mean ≈ 17–20 (massive overdispersion). Dispersion ratio from Poisson model >> 1.
+
+```{r}
+#| label: dataset4-refit
+
+fit4_nb <- glm.nb(visits ~ hospital + health + chronic + gender + school + insurance,
+                  data = NMES1988)
+
+summary(fit4_nb)
+AIC(fit4_poisson, fit4_nb)
+```
+
+**Expected result:** Negative binomial AIC is dramatically lower than Poisson AIC — confirming the better fit.
+
+```{r}
+#| label: dataset4-irr
+
+round(exp(coef(fit4_nb)), 3)
+```
+
+**IRR for `chronic`:**
+
+> Each additional chronic condition is associated with approximately a 17–19% increase in the expected number of physician visits, holding all other variables constant (IRR ≈ 1.17–1.19, highly significant).
+
+**Sample explanation for public health researcher:**
+
+> We initially tried Poisson regression, which assumes that the variance in physician visits equals the mean. That assumption was severely violated — a small subset of patients account for a disproportionate number of visits. The negative binomial model handles this overdispersion explicitly and fits the data far better (AIC drops by hundreds of points). Using Poisson would have produced invalid standard errors and misleading significance tests.
+
+---
+
+## Dataset 5: Space Shuttle O-Ring Failures
+
+**Correct model: Logistic Binomial Regression** (`family = binomial` with `cbind()` outcome)
+
+### Justification (model answer)
+
+> Unlike Datasets 1 and 2 where each observation was a single binary event (one person, one outcome), each observation here represents a group of 6 O-rings per launch, and the outcome is the *count* of O-ring incidents (`Total`) out of that total. This is a grouped binary (binomial) structure — we are modeling a proportion (incidents out of 6) rather than a single 0/1 outcome. Logistic binomial regression handles this by specifying the outcome as a two-column matrix: successes and failures. The model estimates the probability that any individual O-ring has an incident, given the launch temperature.
+
+```{r}
+#| label: dataset5-setup
+
+data("orings", package = "DAAG")
+
+head(orings)
+str(orings)
+
+# The dataset has: Temperature, Erosion, Blowby, Total
+# Total = Erosion + Blowby (combined incident count out of 6 O-rings)
+plot(orings$Temperature, orings$Total / 6,
+     xlab = "Temperature (°F)", ylab = "Proportion of O-rings with incidents",
+     main = "O-ring incidents vs. launch temperature",
+     pch = 19)
+```
+
+```{r}
+#| label: dataset5-model
+
+# Outcome: Total incidents out of 6 O-rings
+fit5 <- glm(cbind(Total, 6 - Total) ~ Temperature,
+            data = orings,
+            family = binomial(link = "logit"))
+
+summary(fit5)
+
+# Odds ratios
+exp(coef(fit5))
+```
+
+**Key finding:** Temperature is a significant negative predictor (lower temperature → higher probability of O-ring incidents).
+
+```{r}
+#| label: dataset5-prediction
+
+launch_day <- data.frame(Temperature = 31)
+
+pred_prob <- predict(fit5, newdata = launch_day, type = "response")
+
+cat("Predicted probability of incident per O-ring at 31°F:", round(pred_prob, 4), "\n")
+cat("Predicted probability of at least one incident (of 6):", round(1 - (1 - pred_prob)^6, 4), "\n")
+```
+
+**Expected result:** Probability per O-ring ≈ 0.80–0.99 at 31°F (well outside the observed data range — students should note this is an extrapolation). Probability of at least one incident ≈ ~1.00.
+
+**Sample written summary:**
+
+> The statistical model shows a clear and significant relationship between launch temperature and the probability of O-ring incidents — lower temperatures substantially increase the risk of failure. When we extrapolate the model to 31°F, the predicted probability of an incident on any individual O-ring is extremely high, meaning the probability that at least one of the six O-rings would fail was effectively 100%. This analysis strongly suggests the launch should not have proceeded. It is important to note that 31°F was well below any temperature ever tested, meaning this prediction is an extrapolation; nevertheless, the trend in the data pointed unambiguously toward catastrophic risk at that temperature.
+
+---

@@ -1,0 +1,148 @@
+---
+title: "Lab 9 - Generalized Linear Models - ANSWER KEY"
+embed-resources: true
+theme: journal
+toc: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 8. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - linear regression.**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+# Answers
+
+## Part 1
+
+## Import Data
+
+```{r}
+#| echo: true
+
+chimp <- read.csv("~/Documents/assignments_SP2026/Lab9_GLM/data/chimpanzees.csv")
+```
+
+### Fit Logistic Regression Models
+
+```{r}
+#| echo: true
+
+fit_chimp1 <- glm(pulled_left ~ prosoc_left, data = chimp)
+fit_chimp2 <- glm(pulled_left ~ prosoc_left + chose_prosoc + condition, data = chimp)
+```
+
+### Compare Models
+
+Students can add any number of predictors to the second model. Interpretation should relate to the model with the **lowest** aic value. In this case, ***Model 1*** is best. All interpretation will be made from model 1. 
+
+```{r}
+#| echo: true
+
+fit_chimp1$aic
+fit_chimp2$aic
+```
+
+### Interpret Best model
+
+The odds of a chimpanzee pulling the lever given their friend was on the other side increases 1.14x. This indicates chimpanzees are likely prosocial.
+
+```{r}
+#| echo: true
+
+summary(fit_chimp1)
+exp(fit_chimp1$coefficients)
+```
+
+## Part 2
+
+### Import Data
+
+```{r}
+#| echo: true
+
+pop <- read.csv("~/Documents/assignments_SP2026/Lab9_GLM/data/Kline.csv")
+```
+
+### Modify Data
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+library(magrittr)
+
+pop %<>% mutate(log_pop = log(population), contact_high = ifelse(contact == "high", 1, 0))
+
+```
+
+### Fit Poisson Model
+
+```{r}
+#| echo: true
+
+fit_pop1 <- glm(total_tools ~ log_pop + contact_high, data = pop, family = poisson)
+```
+
+### Interpretation
+
+In general, total tools increase with an increase in population size BUT there is a decrease in tool count if there is low contact between populations. Said another way, tool number increases if contact increases. 
+
+```{r}
+#| echo: true
+
+summary(fit_pop1)
+exp(fit_pop1$coefficients)
+```
+
+### Compare to Additional Models
+
+Both models are relativley similar. Therefore, I would select the model with **less** predictors (because it is simpler). The interpretation does not change from above. 
+
+```{r}
+#| echo: true
+
+fit_pop2 <- glm(total_tools ~ log_pop + contact_high + mean_TU, data = pop, family = poisson)
+
+fit_pop1$aic
+fit_pop2$aic
+```
+
+## Part 3
+
+### Prepare Data
+
+```{r}
+#| echo: true
+
+library(MASS)
+data("snails")
+```
+
+### Fit a Binomial Model
+
+```{r}
+#| echo: true
+
+fit_snail1 <- glm(cbind(Deaths, N - Deaths) ~ Species + Exposure + Rel.Hum + Temp, data = snails, family = binomial)
+```
+
+### Interpretation
+
+Species B is more likely to die in comparison to species A. Exposure increases risk of death 4-fold. A decrease in relative humidity decreases risk of death. Temperature has a minimal if not slightly positive effect.
+
+```{r}
+#| echo: true
+
+summary(fit_snail1)
+exp(fit_snail1$coefficients)
+```
+
+#

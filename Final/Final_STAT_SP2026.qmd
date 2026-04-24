@@ -1,0 +1,542 @@
+---
+title: "Final Practical - Spring 2026"
+subtitle: "ANTH 3900/5203"
+theme: journal
+embed-resources: true
+echo: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**[Due on Wednesday May 6 by 11:59PM, no exceptions!]{style="color: red;"}**
+
+# Instructions & Examination Overview
+
+## Purpose
+
+This final practical examination is the culminating assessment for ANTH 3900/5203. It is designed to evaluate your ability to work with real-world data end-to-end — from wrangling and analysis through visualization and written interpretation. **There is no single correct answer** for most sections. What is being assessed is the quality of your reasoning, the appropriateness of your methods, the clarity of your code, and your ability to communicate what the data tell us in plain, precise language.
+
+## Structure & Point Values
+
+The examination consists of **six (6) sections**, each worth **20 points**, for a total of **120 points**.
+
+| Section | Topic | Points |
+|:--------|:------|-------:|
+| Part 1 | Global Health Spending | 20 |
+| Part 2 | The Exploding Snowman | 20 |
+| Part 3 | The Bechdel Test | 20 |
+| Part 4 | Super Bowl Ads | 20 |
+| Part 5 | Of Monsters and Maths | 20 |
+| Part 6 | Energy Consumption | 20 |
+| **Total** | | **120** |
+
+## General Expectations
+
+You are expected to:
+
+1. **Write clean, reproducible R code.** All code must be embedded in labeled, executable code chunks. Code that does not run will receive partial or no credit for the technical component. Use comments (`#`) where helpful to clarify intent.
+
+2. **Choose methods appropriate to the data and the question.** You have learned a range of techniques this semester — descriptive statistics, visualization, regression, classification, clustering, and more. Part of what is being evaluated is whether you recognize *which* tool is suited to *which* question. You are not told which method to use; that decision is yours to justify.
+
+3. **Interpret your results in writing.** Every section requires narrative interpretation embedded in your document (outside of code chunks). Producing output without commentary will result in significant point deductions. Your written responses should be substantive — go beyond simply restating what a table or figure shows and explain *what it means* in context.
+
+4. **Produce meaningful visualizations.** Figures must include appropriate axis labels, titles, and legends. Unlabeled or unformatted figures will receive reduced credit. Visualizations should be chosen to illuminate the question, not simply demonstrate that you can make a plot.
+
+5. **Render a complete, self-contained HTML document.** Submit both the `.html` file rendered from your `.qmd` and the `.qmd file`. It must be rendered for full credit. The document must render without errors. Use `embed-resources: true` (already set) to ensure all assets are bundled. All files must be submitted on github!
+
+## Approach & Academic Integrity
+
+This is an **individual** examination. You may consult course notes, readings, and R documentation. You may also collaborate with classmates. But, **you must submit your own work.** 
+
+Use of generative AI tools to write your code or interpretation is not permitted; your answers should reflect your own understanding as developed throughout the course. Note, if you must de-bug code with such resources (or others), that is allowed. BUT - I will know if you start using functions that we have not even come close to discussing this semester. That will be a dead giveaway. There will be more than 1 way to do things. BUT - I still expect you to arrive there on your own (or working together).
+
+---
+
+# Scoring Rubric
+
+Each of the six sections is graded on the same 20-point rubric, divided across three domains: **Technical Execution**, **Visualization**, and **Interpretation**. The criteria below apply uniformly across all sections.
+
+---
+
+## Domain 1 — Technical Execution (10 points)
+
+This domain assesses whether your code is correct, efficient, and appropriate to the analytical question.
+
+| Score | Criteria |
+|------:|:---------|
+| **9–10** | Code runs completely without errors or warnings. Data are loaded, filtered, and transformed correctly. The chosen method(s) are well-suited to the question and applied correctly. Code is readable and logically organized. Any assumptions (e.g., handling of missing data, variable recoding) are documented in comments. |
+| **7–8** | Code runs with minor issues (e.g., a suppressed warning that does not affect output). Methods are appropriate and largely applied correctly, with small errors that do not undermine the analysis. Organization is adequate. |
+| **5–6** | Code runs but contains notable errors in logic, data handling, or method application that affect the validity of results. The general approach is reasonable but execution is incomplete or flawed. |
+| **3–4** | Code runs partially or with significant errors. Method choice is questionable or misapplied. Output is produced but is likely incorrect or misleading. |
+| **1–2** | Code does not run, produces no usable output, or the method chosen is clearly inappropriate for the question. |
+| **0** | No code submitted for this section, or code is entirely non-functional. |
+
+---
+
+## Domain 2 — Visualization (4 points)
+
+This domain assesses the quality and communicative clarity of any figures or tables produced.
+
+| Score | Criteria |
+|------:|:---------|
+| **4** | Visualization(s) are well-chosen for the data type and question. All figures include a descriptive title, labeled axes, and a legend where applicable. Color or faceting is used purposefully. The figure could stand alone and be understood by a reader unfamiliar with the code. |
+| **3** | Visualization(s) are appropriate and mostly well-labeled. Minor formatting issues (e.g., a missing axis label or an uninformative default title) but the figure is readable and informative. |
+| **2** | Visualization(s) are present but have significant formatting gaps (e.g., missing labels, default variable names on axes, no title) or the figure type is a poor fit for the question. |
+| **1** | A figure is present but is largely unformatted, difficult to interpret, or adds little analytical value. |
+| **0** | No visualization produced, or visualization is entirely absent when one was clearly warranted. |
+
+---
+
+## Domain 3 — Interpretation (6 points)
+
+This domain assesses the quality and depth of your written narrative. Interpretation must appear as prose in the body of the document — not as code comments.
+
+| Score | Criteria |
+|------:|:---------|
+| **6** | Interpretation is substantive, specific, and directly addresses the section's guiding questions. Claims are grounded in the output (statistics, model results, or figures are cited by name or value). The response demonstrates an understanding of *why* the patterns exist, not just *that* they exist. Writing is clear and precise. |
+| **4–5** | Interpretation addresses the main questions and references the output, but may lack depth, miss a secondary pattern, or rely on overly general statements. The analytical reasoning is sound but not fully developed. |
+| **2–3** | Interpretation is present but is largely descriptive (restating what the output shows without explaining its meaning). Key questions from the section are partially or superficially addressed. |
+| **1** | Interpretation is minimal — a sentence or two that does not meaningfully engage with the output or the question. |
+| **0** | No written interpretation provided, or text consists entirely of restated variable names / column headers with no analytical content. |
+
+---
+
+## Section Score Summary
+
+| Domain | Points Available |
+|:-------|----------------:|
+| Technical Execution | 10 |
+| Visualization | 4 |
+| Interpretation | 6 |
+| **Section Total** | **20** |
+
+> **A note on partial credit:** Partial credit is awarded within each domain at the grader's discretion. A section that is analytically strong but has non-rendering code, or one that has flawless code but no written interpretation, will score well in one domain and poorly in another. The most successful responses demonstrate balance across all three domains.
+
+---
+
+# Technical Setup
+
+Before beginning, load any required packages in a single setup chunk at the top of your document. All data are loaded directly from URL using `readr::read_csv()` as shown in each section — no local file downloads are required. Ensure you have a stable internet connection when rendering.
+
+---
+
+*Good luck. Approach each section thoughtfully, let the data guide your choices, and remember: a well-reasoned analysis with clear interpretation will always outperform a technically elaborate one that has nothing to say.*
+
+---
+
+
+## Part 1 - Global Health Spending
+
+The [WHO Global Health Expenditure Database (GHED)](https://apps.who.int/nha/database) provides comparable data on health expenditure for 195 countries and territories since 2000.
+
+The data tracks how much countries spend on health care, where the money comes from (government, private, or external sources), how it is channelled through financing schemes (e.g. government programmes, voluntary insurance, out-of-pocket payments), and what it is spent on (e.g. curative care, preventive care, medical goods). How health systems are funded and how resources are allocated directly shapes health outcomes, progress toward universal health coverage, and whether households face financial hardship when accessing care. These indicators are essential to inform health policy decisions.
+
+In this section, I am interested in how health care spending changed pre- and post-Covid in a subset of 5 countries from the database.  To access the data please use the following code:
+
+```{r}
+#| eval: false
+
+spending_purpose <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-04-21/spending_purpose.csv')
+```
+
+A table defining each variable is as follow:
+
+: WHO GHED Variable Definitions {#tbl-ghed}
+
++------------------+-----------+--------------------------------------------------------+
+| variable         | class     | description                                            |
++==================+===========+========================================================+
+| country_name     | character | Country or territory name as used by WHO.              |
++------------------+-----------+--------------------------------------------------------+
+| iso3_code        | character | ISO 3166-1 alpha-3 country code.                       |
++------------------+-----------+--------------------------------------------------------+
+| year             | integer   | Year of observation.                                   |
++------------------+-----------+--------------------------------------------------------+
+| indicator_code   | character | GHED indicator code. Suffix indicates unit:            |
+|                  |           | `_che` = % of CHE, `_usd2023` = constant 2023 US$.     |
+|                  |           | Data available from 2016 onwards.                      |
+|                  |           |                                                        |
+|                  |           | **Indicators:** |
+|                  |           |                                                        |
+|                  |           | * `hc1` — Curative care                                |
+|                  |           | * `hc2` — Rehabilitative care                          |
+|                  |           | * `hc3` — Long-term care (health)                      |
+|                  |           | * `hc4` — Ancillary services                           |
+|                  |           | * `hc5` — Medical goods                                |
+|                  |           | * `hc6` — Preventive care                              |
+|                  |           | * `hc7` — Governance and health system administration  |
+|                  |           | * `hc9` — Other health care services (n.e.c.)          |
++------------------+-----------+--------------------------------------------------------+
+| spending_purpose | character | Health care function or purpose of spending.           |
++------------------+-----------+--------------------------------------------------------+
+| value            | double    | Indicator value in the unit specified.                 |
++------------------+-----------+--------------------------------------------------------+
+| unit             | character | Unit of measurement: `% of current health expenditure` |
+|                  |           | or `constant 2023 US$`.                                |
++------------------+-----------+--------------------------------------------------------+
+
+Your task:
+
+1.  Filter the dataset with the year 2019-2022. Use the following countries: Spain, Pakistan, Poland, Sri Lanka, and the United States.
+
+2.  Address how money is spent according to total US Dollars `unit == constant 2023 US$` AND how money is spent according to % of current health care expenditure `unit == % of current health expenditure`.
+
+3. In your analysis and interpretation, be sure to address how the indicator code(s) have changed over time and between each country. Justify your interpretations with appropriate code and visualizations.
+
+## Part 2 - The Exploding Snowman
+
+The *Boeoegg* is a snowman effigy made of cotton wool and stuffed with fireworks, created every year for Zurich's "Sechselaeuten" spring festival. The saying goes that the quicker the Boeoeg's head explodes, the finer the summer will be.
+
+In this section, I am interested in the relationship between how long it takes for the snowman's head to explode (`duration`) given the appropriate weather information. 
+
+```{r}
+#| eval: false
+sechselaeuten <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-12-02/sechselaeuten.csv')
+```
+
+|variable |class   |description                           |
+|:--------|:-------|:-------------------------------------|
+|year     |double  |Year of Sechselauten festival. |
+|duration |double  |Time elapsed from ignition of Boeoeg effigy until explosion, in minutes. |
+|tre200m0 |double  |Average air temperature 2 m above ground in degrees Celsius (monthly mean). |
+|tre200mn |double  |Minimum air temperature 2 m above ground in degrees Celsius (absolute monthly minimum). |
+|tre200mx |double  |Maximum air temperature 2 m above ground in degrees Celsius (absolute monthly maximum). |
+|sre000m0 |double  |Total sunshine duration in hours (monthly total). |
+|sremaxmv |double  |Total sunshine duration as a percentage of the possible maximum. |
+|rre150m0 |double  |Total precipitation in mm (monthly total). |
+|record   |logical |Years with average summer temperature above 19 degrees Celsius. |
+
+Things to think about:
+
+1. What is most predictive of the explosion?
+  * Temperature
+  * Sunshine
+  * Precipitation
+  
+2. Do years with record heat lead to faster explosions?
+
+3. If we assume summer means more extreme temperatures, does the snowman's head exploding suggest hotter or more extreme summers?
+
+## Part 3 - The Bechdel Test
+
+Audiences and creators know that on one level or another, there's an inherent gender bias in the movie business — whether it's the disproportionately low number of films with female leads, the process of pigeonholing actresses into predefined roles (action chick, romantic interest, middle-aged mother, etc.), or the lack of serious character development for women on screen compared to their male counterparts. What's challenging is quantifying this dysfunction, putting numbers to a trend that is — at least anecdotally — a pretty clear reality.
+
+One of the most enduring tools to measure Hollywood's gender bias is a test originally promoted by cartoonist Alison Bechdel in a 1985 strip from her "Dykes To Watch Out For" series. Bechdel said that if a movie can satisfy three criteria — there are at least two named women in the picture, they have a conversation with each other at some point, and that conversation isn't about a male character — then it passes "The Rule," whereby female characters are allocated a bare minimum of depth.
+
+In this section, I am interested in knowing what features of a movie lead for said move to **Pass** or **Fail** the Bechdel Test. The simplified column of this is `binary` - although, one could also look at the `clean_test` or `test` column for a more comprehensive dive.
+
+
+```{r}
+#| eval: false
+movies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-03-09/movies.csv')
+```
+
+|variable      |class     |description |
+|:-------------|:---------|:-----------|
+|year          |double    | Year |
+|imdb          |character | IMDB|
+|title         |character |Title of movie |
+|test          |character | Bechdel Test outcome|
+|clean_test    |character | Bechdel Test cleaned |
+|binary        |character | Binary pass/fail of bechdel |
+|budget        |double    | Budget as of release year |
+|domgross      |character | Domestic gross in release year |
+|intgross      |character | International gross in release year |
+|code          |character | Code |
+|budget_2013   |double    | Budget normalized to 2013 |
+|domgross_2013 |character | Domestic gross  normalized to 2013 |
+|intgross_2013 |character | International gross normalized to 2013 |
+|period_code   |double    | Period code |
+|decade_code   |double    | Decade Code |
+|imdb_id       |character | IMDB ID |
+|plot          |character | Plot of movie |
+|rated         |character | Rating of movie |
+|response      |character | Response? |
+|language      |character | Language of film |
+|country       |character | Country produced in |
+|writer        |character | Writer of film |
+|metascore     |double    | Metascore rating (0-100) |
+|imdb_rating   |double    | IMDB Rating 0-10|
+|director      |character | Director of movie |
+|released      |character | Released date |
+|actors        |character | Actors |
+|genre         |character | Genre |
+|awards        |character | Awards |
+|runtime       |character | Runtime |
+|type          |character | Type of film |
+|poster        |character | Poster image |
+|imdb_votes    |character | IMDB Votes |
+|error         |character | Error? |
+
+
+Things to think about:
+
+1. How do certain factors influence pass/fail?
+  * Budget?
+  * Gross (How much did the movie make)
+  * Actors / Actresses?
+  * Genre?
+  * Runtime?
+  * IMDB?
+  * Others?
+  
+2. In your interpretation, be clear about which features are most representative of passing the 'test' and be clear about anby patterns you may identify (i.e., perhaps things change over time).
+
+## Part 4 - Super Bowl Ads
+
+In the United States, the Super Bowl is often seen as a *national holiday* as festivities and/or associated commidification extend far beyond the sporting event. This is obvious when we analyze the reach and impact of super bowl commericials - some often becoming meme's and/or part of the general cultural lexicon far after the game. 
+
+In this section, I want to know what traits lead to a 'viral' super bowl commercial. There are several count / integer variables in the associated dataset. Using any number of the *other* variables, please tell me which traits lead to a larger number of likes or dislikes or viewership or even favorites (all youtube counts).
+
+```{r}
+#| eval: false
+
+youtube <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-03-02/youtube.csv')
+```
+
+|variable                  |class     |description |
+|:-------------------------|:---------|:-----------|
+|year                      |double    | Superbowl year |
+|brand                     |character | Brand for commercial |
+|superbowl_ads_dot_com_url |character | Superbowl ad URL |
+|youtube_url               |character | Youtube URL |
+|funny                     |logical   | Contains humor |
+|show_product_quickly      |logical   | Shows product quickly |
+|patriotic                 |logical   | Patriotic |
+|celebrity                 |logical   | Contains celebrity |
+|danger                    |logical   | Contains danger |
+|animals                   |logical   | Contains animals |
+|use_sex                   |logical   | Uses sexuality |
+|id                        |character | Youtube ID |
+|kind                      |character | Youtube Kind |
+|etag                      |character | Youtube etag |
+|view_count                |integer   | Youtube view count |
+|like_count                |integer   | Youtube like count |
+|dislike_count             |integer   | Youtube dislike count |
+|favorite_count            |integer   | Youtube favorite count |
+|comment_count             |integer   | Youtube comment count |
+|published_at              |character | Youtube when published |
+|title                     |character | Youtube title |
+|description               |character | Youtube description |
+|thumbnail                 |character | Youtube thumbnail |
+|channel_title             |character | Youtube channel name |
+|category_id               |character | Youtube content category id |
+
+Things to keep in mind:
+
+1. Remember your outcome will be some count or votes but your predictors will be binary and/or multiple category. 
+
+2. Do you see differences by year? Or by specific brands? Etc.
+
+3. The bulk of your interpretation shoul relate to what increaeses or decreases this vote or count variable.
+
+## Part 5 - Of Monsters and Maths
+
+In this section you will be utilizing a dataset with Dungeons and Dragons monsters and their associated statistics. I am most interested in how certain types or sizes of monsters may cluster and/or be related to each other. But you may also think about other features such as:
+
+* Which types of monsters have the highest (or lowest) of each ability score?
+* Which monster types have a broad range of challenger ratings?
+* Which language allows your character to communicate with the most monsters?
+* How else can the dataset be processed to pull out common fields?
+
+In your interpretations, please supply a general description of the monsters, how they cluster and/or are related, what features are most discriminatory between groups, and given the responses, what groups have the highest or lowest strength?
+
+```{r}
+#| eval: false
+
+monsters <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-27/monsters.csv')
+```
+
+
+|variable          |class     |description                           |
+|:-----------------|:---------|:-------------------------------------|
+|name              |character |The name of the monster. |
+|category          |character |The category to which this monster belongs. Often the same as the name, but, for example, all "Animated Objects" share a category. |
+|cr                |double    |The challenge rating of the monster. |
+|size              |character |Tiny, Small, Medium, Large, Huge or Gargantuan. If size options are presented, you choose the creature's size from those options. |
+|type              |character |Each monster has a tag that identifies the type of creature it is. Certain spells, magic items, class features, and other effects in the game interact in special ways with creatures of a particular type. |
+|descriptive_tags  |character |Optional additional tags. Such tags provide additional categorization and have no rules of their own, but certain game effects might refer to them. |
+|alignment         |character |One of Lawful Good, Neutral Good, Chaotic Good, Lawful Neutral, Neutral, Chaotic Neutral, Lawful Evil, Neutral Evil, Chaotic Evil, or Unaligned. The alignment specified in a monster's stat block is a default suggestion of how to roleplay the monster, inspired by its traditional role in the game or real-world folklore. Change a monster's alignment to suit your storytelling needs. The Neutral alignment, in particular, is an invitation for you to consider whether an individual leans toward one of the other alignments. |
+|ac                |character |The monster's Armor Class (AC) includes its natural armor, Dexterity, gear, and other defenses. |
+|initiative        |integer   |The monster's Initiative modifier. Use the modifier when you roll to determine a monster's Initiative. A monster's Initiative modifier is typically equal to its Dexterity modifier, but some monsters have additional modifiers, such as Proficiency Bonus, applied to that number. |
+|hp                |character |The monster's Hit Points are presented as a number followed by parentheses, where the monster's Hit Point Dice are provided, along with any contribution from its Constitution. Either use the number for the monster's Hit Points (also available in "hp_number") or roll the die expression in parentheses to determine the monster's Hit Points randomly; don't use both. |
+|hp_number         |integer   |The average Hit Points for the monster. |
+|speed             |character |The monster's Speed. Some monsters have one or more of the following speeds: Burrow, Climb, Fly, Swim. |
+|speed_base_number |integer   |The first numeric speed for the monster, which is usually the walking speed. |
+|str               |integer   |The monster's strength score. |
+|dex               |integer   |The monster's dexterity score. |
+|con               |integer   |The monster's constitution score. |
+|int               |integer   |The monster's intelligence score. |
+|wis               |integer   |The monster's wisdom score. |
+|cha               |integer   |The monster's charisma score. |
+|str_save          |integer   |The monster's strength saving throw bonus. |
+|dex_save          |integer   |The monster's dexterity saving throw bonus. |
+|con_save          |integer   |The monster's constitution saving throw bonus. |
+|int_save          |integer   |The monster's intelligence saving throw bonus. |
+|wis_save          |integer   |The monster's wisdom saving throw bonus. |
+|cha_save          |integer   |The monster's charisma saving throw bonus. |
+|skills            |character |The monster's Skill proficiencies, if any. For example, a monster that is very perceptive and stealthy might have bonuses to Wisdom (Perception) and Dexterity (Stealth) checks. A skill bonus is the sum of a monster's relevant ability modifier and its Proficiency Bonus. Other modifiers might apply. |
+|resistances       |character |The monster's Resistances, if any. |
+|vulnerabilities   |character |The monster's Vulnerabilities, if any. |
+|immunities        |character |The monster's Immunities, if any. If the monster has damage and condition Immunities, the damage types are listed before the conditions. |
+|gear              |character |Monsters have proficiency with their equipment. If the monster has equipment that can be given away or retrieved, the items are listed in the Gear entry. The monster's stat block might include special flourishes that happen when the monster uses an item, and the stat block might ignore the rules in "Equipment" for that item. When used by someone else, a retrievable item uses its "Equipment" rules, ignoring any special flourishes in the stat block. The Gear entry doesn't necessarily list all of a monster's equipment. For example, a monster that wears clothes is assumed to be dressed appropriately, and those clothes aren't in this entry. Equipment mentioned outside the Gear entry is considered to be supernatural or highly specialized, and it is unusable when the monster is defeated. |
+|senses            |character |The monster's Passive Perception score, as well as any special senses the monster possesses. |
+|languages         |character |Languages that the monster can use to communicate. Sometimes the monster can understand a language but can't communicate with it, which is noted in its entry. "None" indicates that the creature doesn't comprehend any language. Telepathy is a magical ability that allows a creature to communicate mentally with another creature within a specified range. |
+|full_text         |character |The full text of the monster description, including the information above as well as monster Traits and Actions. |
+
+## Part 6 - Energy Consumption
+
+The amount and type of energy consumed by country per year will differ as a product of a country's population and/or gross domestic product (GDP). Using the below energy dataset I want you to tell me how certain types of energy consumption (i.e., coal, biofuel, fossil, etc.) differ by population size and/or gdp. 
+
+Some things to note:
+
+1. You could make a grouping variable that groups together certain population categories (i.e, 100,000+). You could equally group by GDP. 
+
+2. This could be done at a univariate level or at a multivariate level. I.E. Are you looking at all energy types combined or just 1 or 2. 
+
+3. Is there a relationship between say biofuel consumption and fossil fuel consumption? Do said relationships change year after year?
+
+4. The baseline interpretation I am looking for relates to how energy consumption differs by population and gdp. 
+
+```{r}
+#| eval: false
+
+owid_energy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-06/owid-energy.csv')
+```
+
+|variable                                     |class     |description                                  |
+|:--------------------------------------------|:---------|:--------------------------------------------|
+|country                                      |character |Geographic location                                     |
+|year                                         |double    |Year of observation                                        |
+|iso_code                                     |character |ISO 3166-1 alpha-3 three-letter country codes                                     |
+|population                                   |double    |Population                                   |
+|gdp                                          |double    |Total real gross domestic product, inflation-adjusted                                          |
+|biofuel_cons_change_pct                      |double    |Annual percentage change in biofuel consumption                      |
+|biofuel_cons_change_twh                      |double    |Annual change in biofuel consumption, measured in terawatt-hours                      |
+|biofuel_cons_per_capita                      |double    |Per capita primary energy consumption from biofuels, measured in kilowatt-hours                      |
+|biofuel_consumption                          |double    |Primary energy consumption from biofuels, measured in terawatt-hours                         |
+|biofuel_elec_per_capita                      |double    |Per capita electricity generation from biofuels, measured in kilowatt-hours                      |
+|biofuel_electricity                          |double    |Electricity generation from biofuels, measured in terawatt-hours                          |
+|biofuel_share_elec                           |double    |Share of electricity generation that comes from biofuels                           |
+|biofuel_share_energy                         |double    |Share of primary energy consumption that comes from biofuels                         |
+|carbon_intensity_elec                        |double    |Carbon intensity of electricity production, measured in grams of carbon dioxide emitted per kilowatt-hour                    |
+|coal_cons_change_pct                         |double    |Annual percentage change in coal consumption                        |
+|coal_cons_change_twh                         |double    |Annual change in coal consumption, measured in terawatt-hours                      |
+|coal_cons_per_capita                         |double    |Per capita primary energy consumption from coal, measured in kilowatt-hours                      |
+|coal_consumption                             |double    |Primary energy consumption from coal, measured in terawatt-hours                          |
+|coal_elec_per_capita                         |double    |Per capita electricity generation from coal, measured in kilowatt-hours                      |
+|coal_electricity                             |double    |Electricity generation from coal, measured in terawatt-hours                            |
+|coal_prod_change_pct                         |double    |Annual percentage change in coal production                        |
+|coal_prod_change_twh                         |double    |Annual change in coal production, measured in terawatt-hours                     |
+|coal_prod_per_capita                         |double    |Per capita coal production, measured in kilowatt-hours                       |
+|coal_production                              |double    |Coal production, measured in terawatt-hours                            |
+|coal_share_elec                              |double    |Share of electricity generation that comes from coal                       |
+|coal_share_energy                            |double    |hare of primary energy consumption that comes from coal                        |
+|electricity_demand                           |double    |Electricity demand, measured in terawatt-hours                      |
+|electricity_generation                       |double    |Electricity generation, measured in terawatt-hours                     |
+|electricity_share_energy                     |double    |Electricity generation as a share of primary energy                  |
+|energy_cons_change_pct                       |double    |Annual percentage change in primary energy consumption                |
+|energy_cons_change_twh                       |double    |Annual change in primary energy consumption, measured in terawatt-hours                 |
+|energy_per_capita                            |double    |Primary energy consumption per capita, measured in kilowatt-hours                      |
+|energy_per_gdp                               |double    |Energy consumption per unit of GDP. This is measured in kilowatt-hours per 2011 international-$                            |
+|fossil_cons_change_pct                       |double    |Annual percentage change in fossil fuel consumption                     |
+|fossil_cons_change_twh                       |double    |Annual change in fossil fuel consumption, measured in terawatt-hours                     |
+|fossil_elec_per_capita                       |double    |Per capita electricity generation from fossil fuels, measured in kilowatt-hours. This is the sum of electricity generated from coal, oil and gas.                       |
+|fossil_electricity                           |double    |Electricity generation from fossil fuels, measured in terawatt-hours. This is the sum of electricity generation from coal, oil and gas.                        |
+|fossil_energy_per_capita                     |double    |Per capita fossil fuel consumption, measured in kilowatt-hours. This is the sum of primary energy from coal, oil and gas.              |
+|fossil_fuel_consumption                      |double    |Fossil fuel consumption, measured in terawatt-hours. This is the sum of primary energy from coal, oil and gas.              |
+|fossil_share_elec                            |double    |Share of electricity generation that comes from fossil fuels (coal, oil and gas combined)                       |
+|fossil_share_energy                          |double    |Share of primary energy consumption that comes from fossil fuels                   |
+|gas_cons_change_pct                          |double    |Annual percentage change in gas consumption                     |
+|gas_cons_change_twh                          |double    |Annual change in gas consumption, measured in terawatt-hours                        |
+|gas_consumption                              |double    |Primary energy consumption from gas, measured in terawatt-hours                       |
+|gas_elec_per_capita                          |double    |Per capita electricity generation from gas, measured in kilowatt-hours                   |
+|gas_electricity                              |double    |Electricity generation from gas, measured in terawatt-hours                     |
+|gas_energy_per_capita                        |double    |Per capita primary energy consumption from gas, measured in kilowatt-hours                  |
+|gas_prod_change_pct                          |double    |Annual percentage change in gas production                      |
+|gas_prod_change_twh                          |double    |Annual change in gas production, measured in terawatt-hours                    |
+|gas_prod_per_capita                          |double    |Per capita gas production, measured in kilowatt-hours                    |
+|gas_production                               |double    |Gas production, measured in terawatt-hours                       |
+|gas_share_elec                               |double    |Share of electricity generation that comes from gas                       |
+|gas_share_energy                             |double    |Share of primary energy consumption that comes from gas              |
+|greenhouse_gas_emissions                     |double    |Greenhouse-gas emissions produced in the generation of electricity, measured in million tonnes of CO2 equivalent              |
+|hydro_cons_change_pct                        |double    |Annual percentage change in hydropower consumption                  |
+|hydro_cons_change_twh                        |double    |Annual change in hydropower consumption, measured in terawatt-hours                 |
+|hydro_consumption                            |double    |Primary energy consumption from hydropower, measured in terawatt-hours                     |
+|hydro_elec_per_capita                        |double    |Per capita electricity generation from hydropower, measured in kilowatt-hours              |
+|hydro_electricity                            |double    |Electricity generation from hydropower, measured in terawatt-hours                   |
+|hydro_energy_per_capita                      |double    |Per capita primary energy consumption from hydropower, measured in kilowatt-hours              |
+|hydro_share_elec                             |double    |Share of electricity generation that comes from hydropower                         |
+|hydro_share_energy                           |double    |Share of primary energy consumption that comes from hydropower                 |
+|low_carbon_cons_change_pct                   |double    |Annual percentage change in low-carbon energy consumption               |
+|low_carbon_cons_change_twh                   |double    |Annual change in low-carbon energy consumption, measured in terawatt-hours             |
+|low_carbon_consumption                       |double    |Primary energy consumption from low-carbon sources, measured in terawatt-hours            |
+|low_carbon_elec_per_capita                   |double    |Per capita electricity generation from low-carbon sources, measured in kilowatt-hours       |
+|low_carbon_electricity                       |double    |Electricity generation from low-carbon sources, measured in terawatt-hours. This is the sum of electricity generation from renewables and nuclear power                 |
+|low_carbon_energy_per_capita                 |double    |Per capita primary energy consumption from low-carbon sources, measured in kilowatt-hours             |
+|low_carbon_share_elec                        |double    |Share of electricity generation that comes from low-carbon sources. This is the sum of electricity from renewables and nuclear                 |
+|low_carbon_share_energy                      |double    |Share of primary energy consumption that comes from low-carbon sources. This is the sum of primary energy from renewables and nuclear                   |
+|net_elec_imports                             |double    |Net electricity imports, measured in terawatt-hours                         |
+|net_elec_imports_share_demand                |double    |Net electricity imports as a share of electricity demand           |
+|nuclear_cons_change_pct                      |double    |Annual percentage change in nuclear consumption                |
+|nuclear_cons_change_twh                      |double    |Annual change in nuclear consumption, measured in terawatt-hours                |
+|nuclear_consumption                          |double    |Primary energy consumption from nuclear power, measured in terawatt-hours                 |
+|nuclear_elec_per_capita                      |double    |Per capita electricity generation from nuclear power, measured in kilowatt-hours            |
+|nuclear_electricity                          |double    |Electricity generation from nuclear power, measured in terawatt-hours                  |
+|nuclear_energy_per_capita                    |double    |Per capita primary energy consumption from nuclear, measured in kilowatt-hours          |
+|nuclear_share_elec                           |double    |Share of electricity generation that comes from nuclear power             |
+|nuclear_share_energy                         |double    |Share of primary energy consumption that comes from nuclear power              |
+|oil_cons_change_pct                          |double    |Annual percentage change in oil consumption                      |
+|oil_cons_change_twh                          |double    |Annual change in oil consumption, measured in terawatt-hours                  |
+|oil_consumption                              |double    |Primary energy consumption from oil, measured in terawatt-hours                         |
+|oil_elec_per_capita                          |double    |Per capita electricity generation from oil, measured in kilowatt-hours               |
+|oil_electricity                              |double    |Electricity generation from oil, measured in terawatt-hours           |
+|oil_energy_per_capita                        |double    |Per capita primary energy consumption from oil, measured in kilowatt-hours                  |
+|oil_prod_change_pct                          |double    |Annual percentage change in oil production                     |
+|oil_prod_change_twh                          |double    |Annual change in oil production, measured in terawatt-hours                |
+|oil_prod_per_capita                          |double    |Per capita oil production, measured in kilowatt-hours                     |
+|oil_production                               |double    |Oil production, measured in terawatt-hours                   |
+|oil_share_elec                               |double    |Share of electricity generation that comes from oil                         |
+|oil_share_energy                             |double    |Share of primary energy consumption that comes from oil                    |
+|other_renewable_consumption                  |double    |Primary energy consumption from other renewables, measured in terawatt-hours            |
+|other_renewable_electricity                  |double    |Electricity generation from other renewable sources including biofuels, measured in terawatt-hours           |
+|other_renewable_exc_biofuel_electricity      |double    |Electricity generation from other renewable sources excluding biofuels, measured in terawatt-hours   |
+|other_renewables_cons_change_pct             |double    |Annual percentage change in energy consumption from other renewables       |
+|other_renewables_cons_change_twh             |double    |Annual change in other renewable consumption, measured in terawatt-hours       |
+|other_renewables_elec_per_capita             |double    |Per capita electricity generation from other renewables including biofuels, measured in kilowatt-hours     |
+|other_renewables_elec_per_capita_exc_biofuel |double    |Per capita electricity generation from other renewables excluding biofuels, measured in kilowatt-hours |
+|other_renewables_energy_per_capita           |double    |Per capita primary energy consumption from other renewables, measured in kilowatt-hours      |
+|other_renewables_share_elec                  |double    |Share of electricity generation that comes from other renewables including biofuels       |
+|other_renewables_share_elec_exc_biofuel      |double    |Share of electricity generation that comes from other renewables excluding biofuels    |
+|other_renewables_share_energy                |double    |Share of primary energy consumption that comes from other renewables                |
+|per_capita_electricity                       |double    |Electricity generation per capita, measured in kilowatt-hours                  |
+|primary_energy_consumption                   |double    |Primary energy consumption, measured in terawatt-hours         |
+|renewables_cons_change_pct                   |double    |Annual percentage change in renewable energy consumption             |
+|renewables_cons_change_twh                   |double    |Annual change in renewable energy consumption, measured in terawatt-hours            |
+|renewables_consumption                       |double    |Primary energy consumption from renewables, measured in terawatt-hours               |
+|renewables_elec_per_capita                   |double    |Per capita electricity generation from renewables, measured in kilowatt-hours         |
+|renewables_electricity                       |double    |Electricity generation from renewables, measured in terawatt-hours           |
+|renewables_energy_per_capita                 |double    |Per capita primary energy consumption from renewables, measured in kilowatt-hours        |
+|renewables_share_elec                        |double    |Share of electricity generation that comes from renewables                  |
+|renewables_share_energy                      |double    |Share of primary energy consumption that comes from renewables                    |
+|solar_cons_change_pct                        |double    |Annual percentage change in solar consumption                   |
+|solar_cons_change_twh                        |double    |Annual change in solar consumption, measured in terawatt-hours             |
+|solar_consumption                            |double    |Primary energy consumption from solar, measured in terawatt-hours               |
+|solar_elec_per_capita                        |double    |Per capita electricity generation from solar, measured in kilowatt-hours                |
+|solar_electricity                            |double    |Electricity generation from solar, measured in terawatt-hours                   |
+|solar_energy_per_capita                      |double    |Per capita primary energy consumption from solar, measured in kilowatt-hours                 |
+|solar_share_elec                             |double    |Share of electricity generation that comes from solar                      |
+|solar_share_energy                           |double    |Share of primary energy consumption that comes from solar                 |
+|wind_cons_change_pct                         |double    |Annual percentage change in wind consumption                  |
+|wind_cons_change_twh                         |double    |Annual change in wind consumption                 |
+|wind_consumption                             |double    |Primary energy consumption from wind, measured in terawatt-hours                 |
+|wind_elec_per_capita                         |double    |Per capita electricity generation from wind, measured in kilowatt-hours              |
+|wind_electricity                             |double    |Electricity generation from wind, measured in terawatt-hours                     |
+|wind_energy_per_capita                       |double    |Per capita primary energy consumption from wind, measured in kilowatt-hours                      |
+|wind_share_elec                              |double    |Share of electricity generation that comes from wind                        |
+|wind_share_energy                            |double    |Share of primary energy consumption that comes from wind                    |
+
+#
+
+**[Good Luck, Have Fun!]{style="color: red;"}**

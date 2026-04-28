@@ -1,0 +1,202 @@
+---
+title: "Lab 11 - Clustering - KEY"
+embed-resources: true
+theme: journal
+toc: true
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+**Please see below for answers to all parts of Lab 11. Note, I provide you one way to do the code - there are others. That said, all code relates to the topic of the week - linear regression.**
+
+[**Scoring Summary**]{.underline}
+
+* 10 points = submission to Github
+  - **You must upload the QMD and HTML for full credit**
+* 5 points = Code that runs (no errors, all chunks visible)
+* 5 points = Correct answers. (Regardless of code)
+
+# Answers
+
+## Part 1
+
+### Import Data
+
+```{r}
+#| echo: true
+
+dat <- read.csv("data/howells.csv")
+```
+
+### Munge Data
+
+**Grading Note: The exact populations and variables will differ by student. As long as they are doing some filtering and selecting variables + scale / remove NA, full credit will be given.**
+
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+clust_data <- dat %>% filter(Population %in% c("AINU", "ESKIMO", "BERG", "NORSE", "ZULU")) %>% na.omit()
+
+scaled <- clust_data %>% select(5:25) %>% scale()
+
+```
+
+### Best # of Clusters
+
+**Grading Note: The # of clusters will vary by the above choices. As long as students run this code in some form and provide rationale - full credit. Here, 7 clusters are best.
+
+```{r}
+#| echo: true
+
+library(cluster)
+library(factoextra)
+set.seed(1991)
+
+fviz_nbclust(scaled, FUNcluster = kmeans, method = "gap_stat")
+```
+
+### Run K-Means
+
+```{r}
+#| echo: true
+
+kmeans_res <- kmeans(scaled, centers = 7, nstart = 25)
+print(kmeans_res)
+```
+
+### Visualize and Interpretation
+
+**Grading Note: For interpretation and visualization, I just want to see them use a visualize from class (see below or any other). I expect students to intepret the overlap of clusters. It is not expected they add additional labels as I have done below. The actual interpretation here relates to probable sexual dimorphism in populations. But, as long as a visual is made - full credit.**
+
+```{r}
+#| echo: true
+library(ggrepel)
+
+# Get the PCA coordinates from fviz_cluster
+p <- fviz_cluster(kmeans_res, data = scaled,
+    geom = "point") + theme_bw()
+
+# Add your population labels on top
+p + geom_text_repel(
+    aes(label = clust_data$Population),
+    size = 3
+)
+```
+
+## Part 2
+
+### Import Data
+
+```{r}
+#| echo: true
+
+library(mlbench)
+data("BreastCancer")
+```
+
+### Calculate Dissimilarity
+
+```{r}
+#| echo: true
+
+library(cluster)
+
+gower_dis <- daisy(BreastCancer[-c(1,11)], metric = "gower")
+```
+
+### Run k-Mediods
+
+**Grading Note: Note there will be 2 ways to do this. Depending on what is done, will dictate the plot downstream.**
+
+#### Cluster Package
+
+```{r}
+#| echo: true
+
+med1 <- pam(gower_dis, k = 2, diss = T)
+```
+
+#### fpc package
+
+```{r}
+#| echo: true
+
+library(fpc)
+
+med2 <- pamk(gower_dis, 2:10)
+```
+
+### Visualize and Interpret
+
+**Grading Note: Noted above, there are several ways to do this. I provide 1 based on the different packages above. Full credit would have a `ggplot` of `fviz_cluster`. I expect interpretation to discuss the overlap or not of these clusters.**
+
+In this case, it appears Benign and Malignant tumors cluster separately. 
+
+```{r}
+#| echo: true
+
+dat2 <- BreastCancer
+dat2$cluster <- med1$clustering
+
+dat2 %>% group_by(Class, cluster) %>% summarize(count = n()) %>% ggplot() + 
+geom_point(aes(x=Class, y=factor(cluster), 
+size=count, color=count)) + 
+theme_minimal() + labs(x="Point Type", y="Cluster") + 
+theme(legend.position="none", panel.grid.major=element_line())
+```
+
+
+## Part 3
+
+### Import Data
+
+```{r}
+#| echo: true
+
+library(ape)
+data("carnivora")
+```
+
+### Prepare Data
+
+```{r}
+#| echo: true
+
+dat3 <- carnivora %>% select(6:12) %>% na.omit() %>% scale()
+dat4 <- carnivora %>% select(1:12) %>% na.omit()
+```
+
+### Complete Clustering
+
+```{r}
+#| echo: true
+
+distances <- dist(dat3, method = "euclidean")
+
+hc2 <- diana(distances, diss = T)
+```
+
+### Visualize
+
+```{r}
+#| echo: true
+
+pltree(hc2, labels = dat4$Family)
+```
+
+```{r}
+#| echo: true
+
+# Extract cluster numbers
+cluster_grp2 <- cutree(hc2, k = 2)
+
+
+fviz_cluster(list(data = dat3, cluster = cluster_grp2)) + labs(shape = "Cluster",color = "Cluster", fill = "Cluster") + theme_classic()
+```
+
+
+**Grading Note: Students can choose agglomerative or divisive clustering. It will give different answers. Full credit for the clustering as long as either methods is chosen. Various plots can be made. The dendrogram is preferred. Either plot is accepatable. Note, I do expect students to interpret the family / superfamily / species information from the dataset. If this is missing, -0.5 points. **
